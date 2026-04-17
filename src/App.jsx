@@ -708,7 +708,10 @@ function AIPanel({ onClose }) {
       );
       const res  = await Promise.race([fetchPromise, timeoutPromise]);
       const data = await res.json();
-      setResponse(data.text || data.error || "No response.");
+      setResponse((data.text || data.error || "No response.")
+        .replace(/\*\*(.*?)\*\*/g, "$1")
+        .replace(/\*(.*?)\*/g, "$1")
+        .replace(/^- /gm, "• "));
     } catch (err) {
       if (err.message === "timeout") {
         setResponse("Taking longer than expected. Try again in a moment.");
