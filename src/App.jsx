@@ -698,7 +698,7 @@ function AIPanel({ onClose }) {
     setQuery(q); setLoading(true); setResponse("");
     try {
       // 15s timeout via Promise.race
-      const fetchPromise = fetch("https://api.anthropic.com/v1/messages", {
+      const fetchPromise = fetch("/api/ask", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514", max_tokens: 1000,
@@ -711,7 +711,7 @@ function AIPanel({ onClose }) {
       );
       const res  = await Promise.race([fetchPromise, timeoutPromise]);
       const data = await res.json();
-      setResponse(data.content?.find(b => b.type === "text")?.text || "No response.");
+      setResponse(data.text || "No response.");
     } catch (err) {
       if (err.message === "timeout") {
         setResponse("Taking longer than expected. Try again in a moment.");
