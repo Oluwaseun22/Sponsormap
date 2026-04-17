@@ -1049,7 +1049,7 @@ function LandingPage({ onSearch }) {
       {subscribeFor && <SubscribeModal feature={subscribeFor} onClose={() => setSubscribeFor(null)} />}
 
       {/* ── HERO ── */}
-      <section style={{ background: "var(--hero-bg)", position: "relative", overflow: "hidden", padding: "80px 20px 96px" }}>
+      <section style={{ background: "var(--hero-bg)", position: "relative", overflow: "hidden", padding: "80px 20px 48px" }}>
         {/* Dot grid */}
         <div aria-hidden="true" style={{ position: "absolute", inset: 0, opacity: 0.1 }}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
