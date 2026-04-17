@@ -2138,12 +2138,38 @@ export default function SponsorMap() {
     try { localStorage.setItem("sm-theme", dark ? "dark" : "light"); } catch {}
   }, [dark]);
 
+  // Push history entry on every view change so back button works within the app
   const handleNav = useCallback((target, search = "", sector = "") => {
-    setView(target);
+    const actualTarget = target === "ai" ? "search" : target;
+    setView(actualTarget);
     setInitSearch(search);
     setInitSector(sector);
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (target === "ai") { setView("search"); setShowAI(true); }
+    if (target === "ai") { setShowAI(true); }
+    // Push to browser history so back button returns to previous view
+    if (actualTarget !== view) {
+      window.history.pushState({ view: actualTarget }, "", "");
+    }
+  }, [view]);
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = (e) => {
+      if (e.state?.view) {
+        setView(e.state.view);
+        setShowAI(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        // No state = first entry, go home
+        setView("home");
+        setShowAI(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    // Set initial history state
+    window.history.replaceState({ view: "home" }, "", "");
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   return (
