@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { query } = req.body;
+  const { query } = req.body || {};
   if (!query) return res.status(400).json({ error: "No query provided" });
 
   try {
@@ -21,9 +21,14 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    const text = data.content?.find(b => b.type === "text")?.text || "No response.";
+    const text = data.content?.find(b => b.type === "text")?.text;
+    if (!text) {
+      console.error("Anthropic response:", JSON.stringify(data));
+      return res.status(500).json({ error: "Empty response from AI" });
+    }
     res.status(200).json({ text });
   } catch (err) {
+    console.error("AI error:", err);
     res.status(500).json({ error: "AI request failed" });
   }
 }

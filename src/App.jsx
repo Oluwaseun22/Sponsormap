@@ -699,24 +699,21 @@ function AIPanel({ onClose }) {
     try {
       // 15s timeout via Promise.race
       const fetchPromise = fetch("/api/ask", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 1000,
-          system: `You are a UK Skilled Worker visa expert inside SponsorMap. Be direct and specific. 2026 thresholds: £41,700 general, £33,400 new entrant (under 26 or switching from Student visa). For company queries explain verification via find-employer-sponsors.homeoffice.gov.uk. For location/sector queries name 3-5 known A-rated sponsors. Max 150 words. No filler.`,
-          messages: [{ role: "user", content: q }],
-        }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: q }),
       });
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("timeout")), 15000)
       );
       const res  = await Promise.race([fetchPromise, timeoutPromise]);
       const data = await res.json();
-      setResponse(data.text || "No response.");
+      setResponse(data.text || data.error || "No response.");
     } catch (err) {
       if (err.message === "timeout") {
         setResponse("Taking longer than expected. Try again in a moment.");
       } else {
-        setResponse("The AI assistant requires a live deployment. In the prototype preview, API calls are blocked by the sandbox environment. Works correctly at engtx.co.uk/sponsormap.");
+        setResponse("Couldn't reach the AI. Please try again.");
       }
     }
     setLoading(false);
