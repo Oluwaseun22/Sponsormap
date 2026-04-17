@@ -83,41 +83,41 @@ const CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap');
 
   [data-theme="light"] {
-    --bg:             #f8f7f4;
+    --bg:             #f5f4f0;
     --bg-raised:      #ffffff;
     --bg-card:        #ffffff;
-    --bg-card-hi:     #f2f0ec;
-    --border:         rgba(0,0,0,0.08);
-    --border-hi:      rgba(0,0,0,0.16);
-    --border-focus:   rgba(176,120,48,0.5);
-    --t-primary:      #1a1612;
-    --t-secondary:    #5a5248;
-    --t-muted:        #a09890;
-    --accent:         #b07830;
-    --accent-hi:      #c48840;
-    --accent-dim:     rgba(176,120,48,0.1);
-    --accent-mid:     rgba(176,120,48,0.2);
-    --c-green:        #16a34a;
-    --c-yellow:       #b45309;
-    --c-blue:         #2563eb;
-    --c-amber:        #d97706;
-    --c-slate:        #475569;
-    --c-violet:       #7c3aed;
-    --c-rose:         #e11d48;
-    --c-sky:          #0284c7;
-    --c-green-dim:    rgba(22,163,74,0.1);
-    --c-green-border: rgba(22,163,74,0.2);
-    --c-yellow-dim:   rgba(180,83,9,0.1);
-    --c-yellow-border:rgba(180,83,9,0.2);
-    --glow-amber:     rgba(176,120,48,0.07);
-    --glow-blue:      rgba(37,99,235,0.04);
-    --sh-raised:      0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06);
-    --sh-card:        0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-    --header-bg:      rgba(248,247,244,0.92);
-    --hero-bg:        linear-gradient(160deg, #1a2744 0%, #1e3a6e 50%, #152238 100%);
-    --hero-text:      #f0ead8;
-    --hero-muted:     rgba(240,234,216,0.65);
-    --select-arrow:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a09890' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    --bg-card-hi:     #efece6;
+    --border:         rgba(0,0,0,0.09);
+    --border-hi:      rgba(0,0,0,0.18);
+    --border-focus:   rgba(196,136,48,0.55);
+    --t-primary:      #16120e;
+    --t-secondary:    #4e4540;
+    --t-muted:        #9a8e84;
+    --accent:         #c4852a;
+    --accent-hi:      #d4963a;
+    --accent-dim:     rgba(196,133,42,0.12);
+    --accent-mid:     rgba(196,133,42,0.24);
+    --c-green:        #15a348;
+    --c-yellow:       #a84d09;
+    --c-blue:         #1d56d8;
+    --c-amber:        #d07006;
+    --c-slate:        #3f5168;
+    --c-violet:       #6d2fd4;
+    --c-rose:         #d41840;
+    --c-sky:          #0274b4;
+    --c-green-dim:    rgba(21,163,72,0.1);
+    --c-green-border: rgba(21,163,72,0.22);
+    --c-yellow-dim:   rgba(168,77,9,0.1);
+    --c-yellow-border:rgba(168,77,9,0.2);
+    --glow-amber:     rgba(196,133,42,0.09);
+    --glow-blue:      rgba(29,86,216,0.05);
+    --sh-raised:      0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.07);
+    --sh-card:        0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+    --header-bg:      rgba(245,244,240,0.94);
+    --hero-bg:        linear-gradient(160deg, #111d38 0%, #162f5e 45%, #0e1b30 100%);
+    --hero-text:      #f2ead8;
+    --hero-muted:     rgba(242,234,216,0.7);
+    --select-arrow:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239a8e84' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   }
 
   [data-theme="dark"] {
@@ -381,13 +381,13 @@ const CSS = `
   .bm-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 
   /* ── Scroll reveal ── */
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1), transform 0.6s cubic-bezier(0.22,1,0.36,1); }
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1); }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal.visible.reveal-dim { opacity: 0.82; }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-1 { transition-delay: 0.06s; }
+  .reveal-delay-2 { transition-delay: 0.12s; }
+  .reveal-delay-3 { transition-delay: 0.18s; }
+  .reveal-delay-4 { transition-delay: 0.24s; }
 
   /* ── Awake-style nav pill CTA ── */
   .btn-nav-cta {
@@ -602,7 +602,6 @@ function AppHeader({ dark, setDark, onSearch, currentView }) {
 
   return (
     <header ref={ref} style={{ position: "sticky", top: 0, zIndex: 100, background: "var(--header-bg)", backdropFilter: "blur(16px)", borderBottom: "1px solid var(--border)" }}>
-      <div className="header-line" />
       <div style={{ maxWidth: "1080px", margin: "0 auto", padding: "0 16px", height: "60px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
 
         {/* Logo */}
@@ -950,12 +949,17 @@ function useScrollReveal() {
     const els = document.querySelectorAll(".reveal");
     if (!els.length) return;
     const io = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); } }),
-      { threshold: 0.12 }
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add("visible");
+          io.unobserve(e.target);
+        }
+      }),
+      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
     );
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
-  }, []); // run once on mount only
+  }, []);
 }
 
 // ─── Landing page (V14) ───────────────────────────────────────────────────────
@@ -1349,7 +1353,7 @@ function LandingPage({ onSearch }) {
       </section>
 
       {/* ── WAITLIST CTA ── */}
-      <section style={{ padding: "80px 20px" }}>
+      <section style={{ padding: "80px 20px 48px" }}>
         <div style={{ maxWidth: "660px", margin: "0 auto" }}>
           <div className="reveal" style={{ background: "var(--hero-bg)", borderRadius: "var(--r-xl)", overflow: "hidden", position: "relative" }}>
             <div aria-hidden="true" style={{ position: "absolute", inset: 0, opacity: 0.07 }}>
