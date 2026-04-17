@@ -1,16 +1,27 @@
-# React + Vite
+# SponsorMap
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Find UK employers who can actually hire you.**
 
-Currently, two official plugins are available:
+The Home Office publishes a register of every company licensed to sponsor Skilled Worker visas. 125,000+ rows. No search, no sector filter, no salary check — just a raw CSV. SponsorMap makes it searchable.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Live at [engtx.co.uk/sponsormap](https://engtx.co.uk/sponsormap)
 
-## React Compiler
+## Stack
+- Frontend: React + Vite
+- Hosting: Vercel
+- Database (V1): Supabase Postgres
+- CSV refresh (V1): GitHub Actions daily cron
+- Email: Resend
+- AI: Anthropic Claude API
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Running locally
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+Opens at http://localhost:5173
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## .env.local (V1)
+
+eof
