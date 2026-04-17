@@ -1466,8 +1466,8 @@ function LandingPage({ onSearch }) {
         </div>
 
         <div style={{ maxWidth: "960px", margin: "24px auto 0", paddingTop: "18px", borderTop: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-          <span style={{ fontSize: "11px", color: "var(--t-muted)" }}>© 2026 SponsorMap · <a href="https://engtx.co.uk/sponsormap" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>engtx.co.uk/sponsormap</a></span>
-          <span style={{ fontSize: "11px", color: "var(--t-muted)" }}>Data: <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>Home Office Register</a> · Prototype</span>
+          <span style={{ fontSize: "11px", color: "var(--t-muted)" }}>© 2026 SponsorMap · <a href="https://sponsormap.engtx.co.uk" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>sponsormap.engtx.co.uk</a></span>
+          <span style={{ fontSize: "11px", color: "var(--t-muted)" }}>Data: <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>Home Office Register</a></span>
         </div>
       </footer>
     </div>
@@ -1868,7 +1868,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
       {/* Disclaimer */}
       <div style={{ marginTop: "28px", padding: "14px 18px", background: "var(--c-yellow-dim)", border: "1px solid var(--c-yellow-border)", borderRadius: "var(--r-md)", fontSize: "12px", color: "var(--t-muted)", lineHeight: "1.7" }}>
         <span aria-hidden="true" style={{ color: "var(--c-yellow)", marginRight: "6px" }}>⚠</span>
-        <strong style={{ color: "var(--t-secondary)" }}>Prototype — sample data only.</strong>
+        <strong style={{ color: "var(--t-secondary)" }}>Data sourced from the Home Office Register of Licensed Sponsors.</strong>
         {" "}Verify status on the{" "}
         <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer"
            style={{ color: "var(--accent)", fontWeight: "500" }}>official Home Office register</a>{" "}before applying.
@@ -2054,7 +2054,7 @@ function AboutPage({ onSearch }) {
       </div>
 
       <footer style={{ borderTop: "1px solid var(--border)", padding: "28px 20px", textAlign: "center" }}>
-        <div style={{ fontSize: "11px", color: "var(--t-muted)" }}>© 2026 SponsorMap · engtx.co.uk/sponsormap · Prototype — sample data only</div>
+        <div style={{ fontSize: "11px", color: "var(--t-muted)" }}>© 2026 SponsorMap · sponsormap.engtx.co.uk — sample data only</div>
       </footer>
     </div>
   );
@@ -2116,7 +2116,7 @@ function PrivacyPage({ onSearch }) {
       </div>
 
       <footer style={{ borderTop: "1px solid var(--border)", padding: "24px 20px", textAlign: "center" }}>
-        <div style={{ fontSize: "11px", color: "var(--t-muted)" }}>© 2026 SponsorMap · engtx.co.uk/sponsormap</div>
+        <div style={{ fontSize: "11px", color: "var(--t-muted)" }}>© 2026 SponsorMap · sponsormap.engtx.co.uk</div>
       </footer>
     </div>
   );
