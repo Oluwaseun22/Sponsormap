@@ -430,6 +430,7 @@ const CSS = `
     backdrop-filter: blur(12px);
     display: flex; align-items: center; gap: 12px;
     transition: all var(--ease);
+    flex: 0 0 72%; scroll-snap-align: start; min-width: 200px;
   }
   .hero-preview-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(196,160,100,0.3); }
 
@@ -1116,7 +1117,7 @@ function LandingPage({ onSearch }) {
           </div>
 
           {/* Hero product preview strip */}
-          <div className="fade-up" style={{ animationDelay: "0.42s", marginTop: "36px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }} aria-label="Live sponsor examples">
+          <div className="fade-up" style={{ animationDelay: "0.42s", marginTop: "36px", display: "flex", gap: "10px", overflowX: "auto", WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory", paddingBottom: "4px" }} aria-label="Live sponsor examples">
             {SPONSORS.slice(0,3).map(s => {
               const meta = SECTOR_META[s.sector] || { icon: "◉", color: "var(--accent)" };
               return (
