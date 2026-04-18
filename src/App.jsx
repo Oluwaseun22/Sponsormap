@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -80,8 +80,6 @@ const AI_SUGGESTIONS = [
 // ─── Design tokens ────────────────────────────────────────────────────────────
 
 const CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap');
-
   [data-theme="light"] {
     --bg:             #f5f4f0;
     --bg-raised:      #ffffff;
@@ -709,10 +707,7 @@ function AIPanel({ onClose }) {
       );
       const res  = await Promise.race([fetchPromise, timeoutPromise]);
       const data = await res.json();
-      setResponse((data.text || data.error || "No response.")
-        .replace(/\*\*(.*?)\*\*/g, "$1")
-        .replace(/\*(.*?)\*/g, "$1")
-        .replace(/^- /gm, "• "));
+      setResponse(data.text || data.error || "No response.");
     } catch (err) {
       if (err.message === "timeout") {
         setResponse("Taking longer than expected. Try again in a moment.");
@@ -1050,7 +1045,7 @@ function LandingPage({ onSearch }) {
       {subscribeFor && <SubscribeModal feature={subscribeFor} onClose={() => setSubscribeFor(null)} />}
 
       {/* ── HERO ── */}
-      <section style={{ background: "var(--hero-bg)", position: "relative", overflow: "hidden", padding: "80px 20px 48px" }}>
+      <section style={{ background: "var(--hero-bg)", position: "relative", overflow: "hidden", padding: "80px 20px 96px" }}>
         {/* Dot grid */}
         <div aria-hidden="true" style={{ position: "absolute", inset: 0, opacity: 0.1 }}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -1397,7 +1392,7 @@ function LandingPage({ onSearch }) {
                     </button>
                   </div>
                   {waitError && <p style={{ fontSize: "12px", color: "var(--c-rose)", marginTop: "6px" }}>{waitError}</p>}
-                  <p style={{ fontSize: "11px", color: "rgba(240,234,216,0.35)", marginTop: "10px" }}>No spam. One email when V2 ships. <button onClick={() => onSearch("privacy")} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(240,234,216,0.5)", fontSize: "11px", padding: 0, textDecoration: "underline", fontFamily: "var(--ff-ui)" }}>Privacy policy</button>.</p>
+                  <p style={{ fontSize: "11px", color: "rgba(240,234,216,0.45)", marginTop: "10px" }}>🔒 No spam. One email when V2 ships. <button onClick={() => onSearch("privacy")} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(240,234,216,0.5)", fontSize: "11px", padding: 0, textDecoration: "underline", fontFamily: "var(--ff-ui)" }}>Privacy policy</button>.</p>
                 </div>
               ) : (
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.25)", borderRadius: "var(--r-md)", padding: "16px 18px" }}>
@@ -1431,6 +1426,10 @@ function LandingPage({ onSearch }) {
               UK visa sponsor discovery. Data from the Home Office Register of Licensed Sponsors.
             </p>
             <p style={{ fontSize: "11px", color: "var(--t-muted)", lineHeight: "1.6" }}>Part of the <a href="https://engtx.co.uk" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>ENGTX</a> Job Intelligence Suite.</p>
+            <div style={{ display: "flex", gap: "12px", marginTop: "10px" }}>
+              <a href="https://x.com/ToriolaSegun2" target="_blank" rel="noopener noreferrer" style={{ fontSize: "12px", color: "var(--t-muted)", transition: "color var(--ease)" }} onMouseEnter={e => e.currentTarget.style.color = "var(--accent)"} onMouseLeave={e => e.currentTarget.style.color = "var(--t-muted)"}>𝕏 @ToriolaSegun2</a>
+              <a href="https://github.com/Oluwaseun22/sponsormap" target="_blank" rel="noopener noreferrer" style={{ fontSize: "12px", color: "var(--t-muted)", transition: "color var(--ease)" }} onMouseEnter={e => e.currentTarget.style.color = "var(--accent)"} onMouseLeave={e => e.currentTarget.style.color = "var(--t-muted)"}>GitHub ↗</a>
+            </div>
           </div>
 
           {/* Links */}
@@ -2055,7 +2054,7 @@ function AboutPage({ onSearch }) {
       </div>
 
       <footer style={{ borderTop: "1px solid var(--border)", padding: "28px 20px", textAlign: "center" }}>
-        <div style={{ fontSize: "11px", color: "var(--t-muted)" }}>© 2026 SponsorMap · sponsormap.engtx.co.uk — sample data only</div>
+        <div style={{ fontSize: "11px", color: "var(--t-muted)" }}>© 2026 SponsorMap · sponsormap.engtx.co.uk</div>
       </footer>
     </div>
   );
@@ -2123,6 +2122,30 @@ function PrivacyPage({ onSearch }) {
   );
 }
 
+
+// ─── Error boundary ──────────────────────────────────────────────────────────
+
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { hasError: false }; }
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(err, info) { console.error("SponsorMap error:", err, info); }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0e1929", padding: "40px 20px" }}>
+          <div style={{ textAlign: "center", maxWidth: "400px" }}>
+            <div style={{ fontSize: "48px", marginBottom: "16px" }}>⚠</div>
+            <h1 style={{ fontFamily: "Georgia, serif", fontSize: "24px", color: "#f2ead8", marginBottom: "12px" }}>Something went wrong</h1>
+            <p style={{ fontSize: "14px", color: "#9a8e84", marginBottom: "24px", lineHeight: "1.6" }}>SponsorMap hit an unexpected error. Try refreshing the page.</p>
+            <button onClick={() => window.location.reload()} style={{ background: "#c4852a", color: "#fff", border: "none", borderRadius: "20px", padding: "12px 28px", fontSize: "14px", fontWeight: "700", cursor: "pointer" }}>Refresh page</button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // ─── App shell ────────────────────────────────────────────────────────────────
 
 export default function SponsorMap() {
@@ -2174,6 +2197,7 @@ export default function SponsorMap() {
   }, []);
 
   return (
+    <ErrorBoundary>
     <div data-theme={dark ? "dark" : "light"} style={{ minHeight: "100vh", background: "var(--bg)", position: "relative" }}>
       <style>{CSS}</style>
       {view === "search" && <Background />}
@@ -2199,5 +2223,6 @@ export default function SponsorMap() {
       {view === "about"   && <AboutPage onSearch={handleNav} />}
       {view === "privacy" && <PrivacyPage onSearch={handleNav} />}
     </div>
+    </ErrorBoundary>
   );
 }

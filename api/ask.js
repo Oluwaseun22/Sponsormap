@@ -1,8 +1,22 @@
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000;
+const RATE_LIMIT_MAX    = 10;
+const MAX_QUERY_LENGTH  = 500;
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket?.remoteAddress || "unknown";
+  const now = Date.now();
+  const record = rateLimitMap.get(ip) || { count: 0, windowStart: now };
+  if (now - record.windowStart > RATE_LIMIT_WINDOW) { record.count = 0; record.windowStart = now; }
+  record.count++;
+  rateLimitMap.set(ip, record);
+  if (record.count > RATE_LIMIT_MAX) return res.status(429).json({ error: "Too many requests. Please wait a minute." });
+
   const { query } = req.body || {};
   if (!query) return res.status(400).json({ error: "No query provided" });
+  if (query.length > MAX_QUERY_LENGTH) return res.status(400).json({ error: "Query too long. Keep it under 500 characters." });
 
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -19,13 +33,9 @@ export default async function handler(req, res) {
         messages: [{ role: "user", content: query }],
       }),
     });
-
     const data = await response.json();
     const text = data.content?.find(b => b.type === "text")?.text;
-    if (!text) {
-      console.error("Anthropic response:", JSON.stringify(data));
-      return res.status(500).json({ error: "Empty response from AI" });
-    }
+    if (!text) { console.error("Anthropic response:", JSON.stringify(data)); return res.status(500).json({ error: "Empty response from AI" }); }
     res.status(200).json({ text });
   } catch (err) {
     console.error("AI error:", err);
