@@ -1,9 +1,6 @@
-const { neon } = require("@neondatabase/serverless");
+import { neon } from "@neondatabase/serverless";
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const DATABASE_URL = process.env.NEON_DATABASE_URL;
-
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -20,8 +17,10 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: "Invalid email address" });
   }
 
+  const DATABASE_URL = process.env.NEON_DATABASE_URL;
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
   if (!DATABASE_URL || !RESEND_API_KEY) {
-    console.error("Missing env vars");
     return res.status(500).json({ error: "Server configuration error" });
   }
 
@@ -57,7 +56,7 @@ module.exports = async function handler(req, res) {
           from: "SponsorMap <onboarding@resend.dev>",
           to: cleaned,
           subject: "You're on the SponsorMap list",
-          html: "<p>You're on the list. We'll email you the moment SponsorMap Pro goes live.</p><p><a href='https://sponsormap.engtx.co.uk'>Search sponsors now</a></p>",
+          html: "<p>You're on the list. We'll email you when SponsorMap Pro goes live.</p><p><a href='https://sponsormap.engtx.co.uk'>Search sponsors now</a></p>",
         }),
       });
     }
@@ -72,4 +71,4 @@ module.exports = async function handler(req, res) {
     console.error("Waitlist error:", err);
     return res.status(500).json({ error: "Something went wrong. Please try again." });
   }
-};
+}
