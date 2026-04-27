@@ -1,4 +1,3 @@
-cat > api/waitlist.js << 'EOF'
 const { neon } = require("@neondatabase/serverless");
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
@@ -22,6 +21,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (!DATABASE_URL || !RESEND_API_KEY) {
+    console.error("Missing env vars");
     return res.status(500).json({ error: "Server configuration error" });
   }
 
@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
           from: "SponsorMap <onboarding@resend.dev>",
           to: cleaned,
           subject: "You're on the SponsorMap list",
-          html: `<p>You're on the list. We'll email you when SponsorMap Pro goes live.</p><p><a href="https://sponsormap.engtx.co.uk">Search sponsors now →</a></p>`,
+          html: "<p>You're on the list. We'll email you the moment SponsorMap Pro goes live.</p><p><a href='https://sponsormap.engtx.co.uk'>Search sponsors now</a></p>",
         }),
       });
     }
@@ -67,9 +67,9 @@ module.exports = async function handler(req, res) {
       already_subscribed: !isNew,
       message: isNew ? "You're on the list!" : "You're already signed up.",
     });
+
   } catch (err) {
     console.error("Waitlist error:", err);
     return res.status(500).json({ error: "Something went wrong. Please try again." });
   }
 };
-EOF
