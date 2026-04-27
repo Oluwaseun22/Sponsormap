@@ -853,7 +853,7 @@ const FEATURES = [
     icon: "🏛",
     colorVar: "c-slate",
     colorDimVar: "rgba(71,85,105,0.12)",
-    label: "Civil Service Tracker",
+    label: "Civil Service Filter",
     tagline: "Public sector roles for international seekers",
     bullets: ["HMRC, Home Office, DVLA", "NHS Digital & Cabinet Office", "gov.uk jobs pipeline"],
     action: null,
@@ -1021,15 +1021,41 @@ function LandingPage({ onSearch }) {
   const [openFaq,       setOpenFaq]       = useState(null);
   const [footerEmail,   setFooterEmail]   = useState("");
   const [footerDone,    setFooterDone]    = useState(false);
+  const [footerLoading, setFooterLoading] = useState(false);
 
   useScrollReveal();
 
   const handleHeroSearch = () => onSearch("search", heroSearch);
 
-  const handleWaitSubmit = () => {
+  const handleWaitSubmit = async () => {
     if (!waitEmail.trim()) { setWaitError("Enter your email address."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(waitEmail)) { setWaitError("That doesn't look like a valid email."); return; }
-    setWaitError(""); setWaitSubmitted(true);
+    setWaitError("");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: waitEmail.trim(), source: "hero_cta" }),
+      });
+      const data = await res.json();
+      if (data.success) { setWaitSubmitted(true); }
+      else { setWaitError(data.error || "Something went wrong. Try again."); }
+    } catch { setWaitError("Couldn't connect. Please try again."); }
+  };
+
+  const handleFooterSubscribe = async () => {
+    if (!footerEmail.includes("@")) return;
+    setFooterLoading(true);
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: footerEmail.trim(), source: "footer_digest" }),
+      });
+      const data = await res.json();
+      if (data.success) setFooterDone(true);
+    } catch {}
+    setFooterLoading(false);
   };
 
   const handleFeatureClick = (f) => {
@@ -1305,9 +1331,9 @@ function LandingPage({ onSearch }) {
       <section style={{ padding: "80px 20px 0" }}>
         <div style={{ maxWidth: "860px", margin: "0 auto" }}>
           <div className="reveal" style={{ marginBottom: "28px" }}>
-            <div className="mono-label" style={{ color: "var(--accent)", marginBottom: "10px" }}>The ENGTX Job Intelligence Suite</div>
+            <div className="mono-label" style={{ color: "var(--accent)", marginBottom: "10px" }}>What's next</div>
             <h2 style={{ fontFamily: "var(--ff-display)", fontSize: "clamp(22px, 4vw, 30px)", fontWeight: "700", color: "var(--t-primary)", letterSpacing: "-0.025em", lineHeight: "1.2" }}>
-              SponsorMap is just the entry point
+              The full job hunt — coming to Pro.
             </h2>
           </div>
           <div className="reveal" style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
@@ -1456,7 +1482,7 @@ function LandingPage({ onSearch }) {
                     onKeyDown={e => { if (e.key === "Enter" && footerEmail.includes("@")) setFooterDone(true); }}
                     placeholder="your@email.com" aria-label="Subscribe to weekly digest"
                     className="footer-email-input" />
-                  <button onClick={() => { if (footerEmail.includes("@")) setFooterDone(true); }} className="footer-newsletter-btn" aria-label="Subscribe">→</button>
+                  <button onClick={handleFooterSubscribe} disabled={footerLoading} className="footer-newsletter-btn" aria-label="Subscribe">→</button>
                 </div>
               ) : (
                 <p style={{ fontSize: "12px", color: "var(--c-green)", marginTop: "8px", fontFamily: "var(--ff-mono)" }}>✓ Subscribed</p>
