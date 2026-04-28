@@ -1,3 +1,7 @@
+import pg from "pg";
+
+const { Client } = pg;
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -22,39 +26,17 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Database not configured" });
   }
 
+  const client = new Client({ connectionString: DATABASE_URL, ssl: { rejectUnauthorized: false } });
+
   try {
-    const url = new URL(DATABASE_URL);
-    const host = url.hostname;
-    const user = decodeURIComponent(url.username);
-    const pass = decodeURIComponent(url.password);
-    const db   = url.pathname.slice(1).split("?")[0];
-    const auth = Buffer.from(`${user}:${pass}`).toString("base64");
+    await client.connect();
 
-    const neonUrl = `https://${host}/sql`;
+    const result = await client.query(
+      "INSERT INTO waitlist (email, source) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING RETURNING id",
+      [cleaned, source]
+    );
 
-    const insertRes = await fetch(neonUrl, {
-      method: "POST",
-      headers: {
-        "Authorization": `Basic ${auth}`,
-        "Content-Type": "application/json",
-        "Neon-Database-Name": db,
-      },
-      body: JSON.stringify({
-        query: "INSERT INTO waitlist (email, source) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING RETURNING id",
-        params: [cleaned, source],
-      }),
-    });
-
-    const responseText = await insertRes.text();
-    console.log("Neon status:", insertRes.status);
-    console.log("Neon response:", responseText);
-
-    if (!insertRes.ok) {
-      return res.status(500).json({ error: "Database error", detail: responseText });
-    }
-
-    const insertData = JSON.parse(responseText);
-    const isNew = Array.isArray(insertData.rows) && insertData.rows.length > 0;
+    const isNew = result.rowCount > 0;
 
     if (isNew && RESEND_API_KEY) {
       await fetch("https://api.resend.com/emails", {
@@ -76,11 +58,12 @@ export default async function handler(req, res) {
       success: true,
       already_subscribed: !isNew,
       message: isNew ? "You're on the list!" : "You're already signed up.",
-      debug: insertData,
     });
 
   } catch (err) {
     console.error("Waitlist error:", err.message);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: "Something went wrong. Please try again." });
+  } finally {
+    await client.end();
   }
 }
