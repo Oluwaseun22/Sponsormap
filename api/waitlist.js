@@ -1,5 +1,3 @@
-import { neon } from "@neondatabase/serverless";
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -25,29 +23,50 @@ export default async function handler(req, res) {
   }
 
   try {
-    const sql = neon(DATABASE_URL);
+    // Parse Neon connection string
+    const url = new URL(DATABASE_URL);
+    const host = url.hostname;
+    const user = decodeURIComponent(url.username);
+    const pass = decodeURIComponent(url.password);
+    const db   = url.pathname.slice(1).split("?")[0];
+    const auth = Buffer.from(`${user}:${pass}`).toString("base64");
 
-    const result = await sql`
-      INSERT INTO waitlist (email, source)
-      VALUES (${cleaned}, ${source})
-      ON CONFLICT (email) DO NOTHING
-      RETURNING id
-    `;
+    // Run INSERT via Neon HTTP API
+    const insertRes = await fetch(`https://${host}/sql`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Basic ${auth}`,
+        "Content-Type": "application/json",
+        "Neon-Database-Name": db,
+      },
+      body: JSON.stringify({
+        query: "INSERT INTO waitlist (email, source) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING RETURNING id",
+        params: [cleaned, source],
+      }),
+    });
 
-    const isNew = result.length > 0;
+    if (!insertRes.ok) {
+      const errText = await insertRes.text();
+      console.error("Neon error:", errText);
+      return res.status(500).json({ error: "Database error" });
+    }
 
+    const insertData = await insertRes.json();
+    const isNew = Array.isArray(insertData.rows) && insertData.rows.length > 0;
+
+    // Send confirmation email for new signups
     if (isNew && RESEND_API_KEY) {
       await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
+          "Authorization": `Bearer ${RESEND_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           from: "SponsorMap <onboarding@resend.dev>",
           to: cleaned,
           subject: "You're on the SponsorMap list",
-          html: "<p>You're on the list. We'll email you when SponsorMap Pro goes live.</p><p><a href='https://sponsormap.engtx.co.uk'>Search 120,000+ sponsors now →</a></p>",
+          html: "<p>You're on the list. We'll email you when SponsorMap Pro goes live.</p><p><a href='https://sponsormap.engtx.co.uk'>Search 120,000+ sponsors now</a></p>",
         }),
       });
     }
