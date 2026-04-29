@@ -3,37 +3,37 @@ import React, { useState, useMemo, useCallback, useEffect, useRef } from "react"
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const SPONSORS = [
-  { id: 1,  name: "HSBC UK Bank plc",                     town: "Birmingham", county: "West Midlands",      sector: "Finance",     rating: "A", route: "Skilled Worker" },
-  { id: 2,  name: "Google UK Limited",                    town: "London",     county: "Greater London",     sector: "Technology",  rating: "A", route: "Skilled Worker" },
-  { id: 3,  name: "NHS England",                          town: "Leeds",      county: "West Yorkshire",     sector: "Healthcare",  rating: "A", route: "Health & Care Worker" },
-  { id: 4,  name: "Arup Group Limited",                   town: "Leeds",      county: "West Yorkshire",     sector: "Engineering", rating: "A", route: "Skilled Worker" },
-  { id: 5,  name: "Deloitte LLP",                         town: "London",     county: "Greater London",     sector: "Finance",     rating: "A", route: "Skilled Worker" },
-  { id: 6,  name: "Bradford Teaching Hospitals NHS FT",   town: "Bradford",   county: "West Yorkshire",     sector: "Healthcare",  rating: "A", route: "Health & Care Worker" },
-  { id: 7,  name: "Lloyds Banking Group plc",             town: "Leeds",      county: "West Yorkshire",     sector: "Finance",     rating: "A", route: "Skilled Worker" },
-  { id: 8,  name: "Amazon UK Services Ltd",               town: "London",     county: "Greater London",     sector: "Technology",  rating: "A", route: "Skilled Worker" },
-  { id: 9,  name: "Mott MacDonald Limited",               town: "Leeds",      county: "West Yorkshire",     sector: "Engineering", rating: "A", route: "Skilled Worker" },
-  { id: 10, name: "Capita Business Services Ltd",         town: "Bradford",   county: "West Yorkshire",     sector: "Technology",  rating: "A", route: "Skilled Worker" },
-  { id: 11, name: "PwC UK",                               town: "London",     county: "Greater London",     sector: "Finance",     rating: "A", route: "Skilled Worker" },
-  { id: 12, name: "Infosys BPO Limited",                  town: "London",     county: "Greater London",     sector: "Technology",  rating: "A", route: "Skilled Worker" },
-  { id: 13, name: "University of Leeds",                  town: "Leeds",      county: "West Yorkshire",     sector: "Education",   rating: "A", route: "Skilled Worker" },
-  { id: 14, name: "Kirklees Council",                     town: "Bradford",   county: "West Yorkshire",     sector: "Education",   rating: "A", route: "Skilled Worker" },
-  { id: 15, name: "Asda Stores Limited",                  town: "Leeds",      county: "West Yorkshire",     sector: "Retail",      rating: "A", route: "Skilled Worker" },
-  { id: 16, name: "Accenture (UK) Limited",               town: "London",     county: "Greater London",     sector: "Technology",  rating: "A", route: "Skilled Worker" },
-  { id: 17, name: "KPMG LLP",                             town: "London",     county: "Greater London",     sector: "Finance",     rating: "A", route: "Skilled Worker" },
-  { id: 18, name: "British Airways plc",                  town: "London",     county: "Greater London",     sector: "Transport",   rating: "A", route: "Skilled Worker" },
-  { id: 19, name: "Sheffield Teaching Hospitals NHS FT",  town: "Sheffield",  county: "South Yorkshire",    sector: "Healthcare",  rating: "A", route: "Health & Care Worker" },
-  { id: 20, name: "University of Manchester",             town: "Manchester", county: "Greater Manchester", sector: "Education",   rating: "A", route: "Skilled Worker" },
-  { id: 21, name: "JPMorgan Chase Bank NA",               town: "Glasgow",    county: "Glasgow City",       sector: "Finance",     rating: "A", route: "Skilled Worker" },
-  { id: 22, name: "University of Edinburgh",              town: "Edinburgh",  county: "City of Edinburgh",  sector: "Education",   rating: "A", route: "Skilled Worker" },
-  { id: 23, name: "Barclays Bank plc",                    town: "Glasgow",    county: "Glasgow City",       sector: "Finance",     rating: "A", route: "Skilled Worker" },
-  { id: 24, name: "CGI IT UK Limited",                    town: "Bristol",    county: "City of Bristol",    sector: "Technology",  rating: "A", route: "Skilled Worker" },
-  { id: 25, name: "Newcastle Upon Tyne Hospitals NHS FT", town: "Newcastle",  county: "Tyne and Wear",      sector: "Healthcare",  rating: "A", route: "Health & Care Worker" },
+  { id: 1, name: "HSBC UK Bank plc", town: "Birmingham", county: "West Midlands", sector: "Finance", rating: "A", route: "Skilled Worker" },
+  { id: 2, name: "Google UK Limited", town: "London", county: "Greater London", sector: "Technology", rating: "A", route: "Skilled Worker" },
+  { id: 3, name: "NHS England", town: "Leeds", county: "West Yorkshire", sector: "Healthcare", rating: "A", route: "Health & Care Worker" },
+  { id: 4, name: "Arup Group Limited", town: "Leeds", county: "West Yorkshire", sector: "Engineering", rating: "A", route: "Skilled Worker" },
+  { id: 5, name: "Deloitte LLP", town: "London", county: "Greater London", sector: "Finance", rating: "A", route: "Skilled Worker" },
+  { id: 6, name: "Bradford Teaching Hospitals NHS FT", town: "Bradford", county: "West Yorkshire", sector: "Healthcare", rating: "A", route: "Health & Care Worker" },
+  { id: 7, name: "Lloyds Banking Group plc", town: "Leeds", county: "West Yorkshire", sector: "Finance", rating: "A", route: "Skilled Worker" },
+  { id: 8, name: "Amazon UK Services Ltd", town: "London", county: "Greater London", sector: "Technology", rating: "A", route: "Skilled Worker" },
+  { id: 9, name: "Mott MacDonald Limited", town: "Leeds", county: "West Yorkshire", sector: "Engineering", rating: "A", route: "Skilled Worker" },
+  { id: 10, name: "Capita Business Services Ltd", town: "Bradford", county: "West Yorkshire", sector: "Technology", rating: "A", route: "Skilled Worker" },
+  { id: 11, name: "PwC UK", town: "London", county: "Greater London", sector: "Finance", rating: "A", route: "Skilled Worker" },
+  { id: 12, name: "Infosys BPO Limited", town: "London", county: "Greater London", sector: "Technology", rating: "A", route: "Skilled Worker" },
+  { id: 13, name: "University of Leeds", town: "Leeds", county: "West Yorkshire", sector: "Education", rating: "A", route: "Skilled Worker" },
+  { id: 14, name: "Kirklees Council", town: "Bradford", county: "West Yorkshire", sector: "Education", rating: "A", route: "Skilled Worker" },
+  { id: 15, name: "Asda Stores Limited", town: "Leeds", county: "West Yorkshire", sector: "Retail", rating: "A", route: "Skilled Worker" },
+  { id: 16, name: "Accenture (UK) Limited", town: "London", county: "Greater London", sector: "Technology", rating: "A", route: "Skilled Worker" },
+  { id: 17, name: "KPMG LLP", town: "London", county: "Greater London", sector: "Finance", rating: "A", route: "Skilled Worker" },
+  { id: 18, name: "British Airways plc", town: "London", county: "Greater London", sector: "Transport", rating: "A", route: "Skilled Worker" },
+  { id: 19, name: "Sheffield Teaching Hospitals NHS FT", town: "Sheffield", county: "South Yorkshire", sector: "Healthcare", rating: "A", route: "Health & Care Worker" },
+  { id: 20, name: "University of Manchester", town: "Manchester", county: "Greater Manchester", sector: "Education", rating: "A", route: "Skilled Worker" },
+  { id: 21, name: "JPMorgan Chase Bank NA", town: "Glasgow", county: "Glasgow City", sector: "Finance", rating: "A", route: "Skilled Worker" },
+  { id: 22, name: "University of Edinburgh", town: "Edinburgh", county: "City of Edinburgh", sector: "Education", rating: "A", route: "Skilled Worker" },
+  { id: 23, name: "Barclays Bank plc", town: "Glasgow", county: "Glasgow City", sector: "Finance", rating: "A", route: "Skilled Worker" },
+  { id: 24, name: "CGI IT UK Limited", town: "Bristol", county: "City of Bristol", sector: "Technology", rating: "A", route: "Skilled Worker" },
+  { id: 25, name: "Newcastle Upon Tyne Hospitals NHS FT", town: "Newcastle", county: "Tyne and Wear", sector: "Healthcare", rating: "A", route: "Health & Care Worker" },
 ];
 
-const SECTORS   = ["Technology","Finance","Healthcare","Engineering","Education","Retail","Transport"];
-const LOCATIONS = ["London","Leeds","Bradford","Manchester","Birmingham","Sheffield","Glasgow","Edinburgh","Bristol","Newcastle","Liverpool","Cardiff","Oxford","Cambridge","Aberdeen","Nottingham","Southampton","Reading","York","Brighton"];
-const ROUTES    = ["Skilled Worker","Health & Care Worker","Global Business Mobility","Temporary Worker"];
-const REGIONS   = ["Scotland","England","Wales","Northern Ireland"];
+const SECTORS = ["Technology", "Finance", "Healthcare", "Engineering", "Education", "Retail", "Transport"];
+const LOCATIONS = ["London", "Leeds", "Bradford", "Manchester", "Birmingham", "Sheffield", "Glasgow", "Edinburgh", "Bristol", "Newcastle", "Liverpool", "Cardiff", "Oxford", "Cambridge", "Aberdeen", "Nottingham", "Southampton", "Reading", "York", "Brighton"];
+const ROUTES = ["Skilled Worker", "Health & Care Worker", "Global Business Mobility", "Temporary Worker"];
+const REGIONS = ["Scotland", "England", "Wales", "Northern Ireland"];
 
 // Maps county names from the CSV to UK regions
 const COUNTY_TO_REGION = {
@@ -54,19 +54,19 @@ const COUNTY_TO_REGION = {
 };
 
 const POPULAR_CITIES = [
-  "London","Manchester","Birmingham","Leeds","Glasgow",
-  "Edinburgh","Bristol","Sheffield","Newcastle","Liverpool",
-  "Cardiff","Oxford","Cambridge","Brighton","Aberdeen",
+  "London", "Manchester", "Birmingham", "Leeds", "Glasgow",
+  "Edinburgh", "Bristol", "Sheffield", "Newcastle", "Liverpool",
+  "Cardiff", "Oxford", "Cambridge", "Brighton", "Aberdeen",
 ];
 
 const SECTOR_META = {
-  Technology:  { icon: "⬡", color: "var(--c-blue)",   desc: "Software, cloud, data & IT" },
-  Finance:     { icon: "◈", color: "var(--c-amber)",  desc: "Banking, consulting & fintech" },
-  Healthcare:  { icon: "✚", color: "var(--c-green)",  desc: "NHS, hospitals & clinical" },
-  Engineering: { icon: "⚙", color: "var(--c-slate)",  desc: "Civil, mechanical & infrastructure" },
-  Education:   { icon: "◎", color: "var(--c-violet)", desc: "Universities & research" },
-  Retail:      { icon: "◇", color: "var(--c-rose)",   desc: "Commerce & consumer goods" },
-  Transport:   { icon: "➤", color: "var(--c-sky)",    desc: "Aviation, logistics & rail" },
+  Technology: { icon: "⬡", color: "var(--c-blue)", desc: "Software, cloud, data & IT" },
+  Finance: { icon: "◈", color: "var(--c-amber)", desc: "Banking, consulting & fintech" },
+  Healthcare: { icon: "✚", color: "var(--c-green)", desc: "NHS, hospitals & clinical" },
+  Engineering: { icon: "⚙", color: "var(--c-slate)", desc: "Civil, mechanical & infrastructure" },
+  Education: { icon: "◎", color: "var(--c-violet)", desc: "Universities & research" },
+  Retail: { icon: "◇", color: "var(--c-rose)", desc: "Commerce & consumer goods" },
+  Transport: { icon: "➤", color: "var(--c-sky)", desc: "Aviation, logistics & rail" },
 };
 
 const AI_SUGGESTIONS = [
@@ -507,7 +507,7 @@ function useBookmarks() {
     setBookmarks(prev => {
       const exists = prev.find(b => b.id === sponsor.id);
       const next = exists ? prev.filter(b => b.id !== sponsor.id) : [...prev, sponsor];
-      try { localStorage.setItem("sm-bookmarks", JSON.stringify(next)); } catch {}
+      try { localStorage.setItem("sm-bookmarks", JSON.stringify(next)); } catch { }
       return next;
     });
   }, []);
@@ -560,7 +560,7 @@ function Background() {
 
 function Typewriter({ text, delay = 0 }) {
   const [displayed, setDisplayed] = useState("");
-  const [started,   setStarted]   = useState(false);
+  const [started, setStarted] = useState(false);
   useEffect(() => { const t = setTimeout(() => setStarted(true), delay); return () => clearTimeout(t); }, [delay]);
   useEffect(() => {
     if (!started || displayed.length >= text.length) return;
@@ -581,7 +581,7 @@ function Typewriter({ text, delay = 0 }) {
 
 function AppHeader({ dark, setDark, onSearch, currentView }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [narrow,   setNarrow]   = useState(true);
+  const [narrow, setNarrow] = useState(true);
   const ref = useRef(null);
 
   // Measure actual container width — works inside iframes where CSS media queries
@@ -606,11 +606,11 @@ function AppHeader({ dark, setDark, onSearch, currentView }) {
         {/* Logo */}
         <button onClick={() => nav("home")} style={{ display: "flex", alignItems: "center", gap: "10px", background: "none", border: "none", cursor: "pointer", padding: 0, flexShrink: 0 }}>
           <div style={{ width: "32px", height: "32px", borderRadius: "9px", background: "linear-gradient(135deg, var(--accent) 0%, var(--accent-hi) 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 10px var(--accent-mid)" }}>
-              <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M8 0C4.686 0 2 2.686 2 6c0 4.5 6 12 6 12s6-7.5 6-12c0-3.314-2.686-6-6-6z" fill="white" fillOpacity="0.95"/>
-                <circle cx="8" cy="6" r="2.2" fill="rgba(0,0,0,0.35)"/>
-              </svg>
-            </div>
+            <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M8 0C4.686 0 2 2.686 2 6c0 4.5 6 12 6 12s6-7.5 6-12c0-3.314-2.686-6-6-6z" fill="white" fillOpacity="0.95" />
+              <circle cx="8" cy="6" r="2.2" fill="rgba(0,0,0,0.35)" />
+            </svg>
+          </div>
           <span style={{ fontFamily: "var(--ff-display)", fontSize: "20px", fontWeight: "600", color: "var(--t-primary)", letterSpacing: "-0.02em" }}>SponsorMap</span>
         </button>
 
@@ -618,12 +618,12 @@ function AppHeader({ dark, setDark, onSearch, currentView }) {
         <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
           {!narrow && <>
             <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer"
-               style={{ fontSize: "12px", color: "var(--t-muted)", padding: "8px 10px", transition: "color var(--ease)", whiteSpace: "nowrap" }}
-               onMouseEnter={e => e.currentTarget.style.color = "var(--t-secondary)"}
-               onMouseLeave={e => e.currentTarget.style.color = "var(--t-muted)"}
+              style={{ fontSize: "12px", color: "var(--t-muted)", padding: "8px 10px", transition: "color var(--ease)", whiteSpace: "nowrap" }}
+              onMouseEnter={e => e.currentTarget.style.color = "var(--t-secondary)"}
+              onMouseLeave={e => e.currentTarget.style.color = "var(--t-muted)"}
             >Gov.uk ↗</a>
             <button onClick={() => nav("about")} className="btn-g" style={{ padding: "7px 12px", fontSize: "12px", ...(currentView === "about" ? { borderColor: "var(--accent)", color: "var(--accent)", background: "var(--accent-dim)" } : {}) }}>About</button>
-          <button onClick={() => nav("salary")} className="btn-g" style={{ padding: "7px 12px", fontSize: "12px", ...(currentView === "salary" ? { borderColor: "var(--accent)", color: "var(--accent)", background: "var(--accent-dim)" } : {}) }}>Salary</button>
+            <button onClick={() => nav("salary")} className="btn-g" style={{ padding: "7px 12px", fontSize: "12px", ...(currentView === "salary" ? { borderColor: "var(--accent)", color: "var(--accent)", background: "var(--accent-dim)" } : {}) }}>Salary</button>
           </>}
 
           {/* Theme toggle — always visible */}
@@ -655,7 +655,7 @@ function AppHeader({ dark, setDark, onSearch, currentView }) {
       {/* Dropdown — narrow only */}
       {narrow && menuOpen && (
         <div style={{ background: "var(--bg-raised)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "4px 16px 16px", animation: "fadeIn 0.15s ease forwards" }}>
-          {[["Home","home"],["Search Sponsors","search"],["Salary Checker","salary"],["About","about"],["Privacy Policy","privacy"]].map(([label, v]) => (
+          {[["Home", "home"], ["Search Sponsors", "search"], ["Salary Checker", "salary"], ["About", "about"], ["Privacy Policy", "privacy"]].map(([label, v]) => (
             <button key={v} onClick={() => nav(v)}
               style={{ display: "block", width: "100%", textAlign: "left", background: "none", border: "none", padding: "14px 4px", fontSize: "15px", fontWeight: "500", color: "var(--t-primary)", cursor: "pointer", fontFamily: "var(--ff-ui)", borderBottom: "1px solid var(--border)", transition: "color var(--ease)" }}
               onMouseEnter={e => e.currentTarget.style.color = "var(--accent)"}
@@ -675,12 +675,12 @@ function AppHeader({ dark, setDark, onSearch, currentView }) {
 // ─── AI Panel ─────────────────────────────────────────────────────────────────
 
 function AIPanel({ onClose }) {
-  const [query, setQuery]       = useState("");
-  const [loading, setLoading]   = useState(false);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
-  const inputRef  = useRef(null);
-  const timerRef  = useRef(null);
-  const lastCall  = useRef(0); // rate limiting timestamp
+  const inputRef = useRef(null);
+  const timerRef = useRef(null);
+  const lastCall = useRef(0); // rate limiting timestamp
 
   useEffect(() => { timerRef.current = setTimeout(() => inputRef.current?.focus(), 280); return () => clearTimeout(timerRef.current); }, []);
   useEffect(() => { const h = e => { if (e.key === "Escape") onClose(); }; document.addEventListener("keydown", h); return () => document.removeEventListener("keydown", h); }, [onClose]);
@@ -705,7 +705,7 @@ function AIPanel({ onClose }) {
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("timeout")), 15000)
       );
-      const res  = await Promise.race([fetchPromise, timeoutPromise]);
+      const res = await Promise.race([fetchPromise, timeoutPromise]);
       const data = await res.json();
       setResponse(data.text || data.error || "No response.");
     } catch (err) {
@@ -748,7 +748,7 @@ function AIPanel({ onClose }) {
         </div>
         {loading && (
           <div style={{ display: "flex", gap: "5px", padding: "16px" }} aria-live="polite">
-            {[0,1,2].map(i => <div key={i} style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--accent)", animation: `pulseDot 1.3s ease ${i*0.18}s infinite` }} />)}
+            {[0, 1, 2].map(i => <div key={i} style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--accent)", animation: `pulseDot 1.3s ease ${i * 0.18}s infinite` }} />)}
           </div>
         )}
         {response && !loading && (
@@ -861,19 +861,19 @@ const FEATURES = [
 ];
 
 const ECOSYSTEM = [
-  { name: "SponsorMap",         desc: "Who can hire you",       status: "live",   icon: "⌕" },
-  { name: "JobHunter Pro",      desc: "Search Reed & Indeed",   status: "suite",  icon: "◈" },
-  { name: "NHS Job Tracker",    desc: "Health & care sector",   status: "suite",  icon: "✚" },
-  { name: "Civil Service",      desc: "Public sector roles",    status: "coming", icon: "🏛" },
-  { name: "Tech Job Radar",     desc: "Software engineers",     status: "coming", icon: "⬡" },
+  { name: "SponsorMap", desc: "Who can hire you", status: "live", icon: "⌕" },
+  { name: "JobHunter Pro", desc: "Search Reed & Indeed", status: "suite", icon: "◈" },
+  { name: "NHS Job Tracker", desc: "Health & care sector", status: "suite", icon: "✚" },
+  { name: "Civil Service", desc: "Public sector roles", status: "coming", icon: "🏛" },
+  { name: "Tech Job Radar", desc: "Software engineers", status: "coming", icon: "⬡" },
 ];
 
 // ─── Subscribe modal ──────────────────────────────────────────────────────────
 
 function SubscribeModal({ feature, onClose }) {
-  const [email,     setEmail]     = useState("");
+  const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [error,     setError]     = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const h = e => { if (e.key === "Escape") onClose(); };
@@ -1013,14 +1013,14 @@ const FAQ_ITEMS = [
 ];
 
 function LandingPage({ onSearch }) {
-  const [heroSearch,    setHeroSearch]    = useState("");
-  const [subscribeFor,  setSubscribeFor]  = useState(null);
-  const [waitEmail,     setWaitEmail]     = useState("");
+  const [heroSearch, setHeroSearch] = useState("");
+  const [subscribeFor, setSubscribeFor] = useState(null);
+  const [waitEmail, setWaitEmail] = useState("");
   const [waitSubmitted, setWaitSubmitted] = useState(false);
-  const [waitError,     setWaitError]     = useState("");
-  const [openFaq,       setOpenFaq]       = useState(null);
-  const [footerEmail,   setFooterEmail]   = useState("");
-  const [footerDone,    setFooterDone]    = useState(false);
+  const [waitError, setWaitError] = useState("");
+  const [openFaq, setOpenFaq] = useState(null);
+  const [footerEmail, setFooterEmail] = useState("");
+  const [footerDone, setFooterDone] = useState(false);
   const [footerLoading, setFooterLoading] = useState(false);
 
   useScrollReveal();
@@ -1054,7 +1054,7 @@ function LandingPage({ onSearch }) {
       });
       const data = await res.json();
       if (data.success) setFooterDone(true);
-    } catch {}
+    } catch { }
     setFooterLoading(false);
   };
 
@@ -1122,8 +1122,8 @@ function LandingPage({ onSearch }) {
               <div className="avatar-stack">
                 {[
                   { bg: "rgba(196,160,100,0.8)", label: "AO" },
-                  { bg: "rgba(91,156,246,0.8)",  label: "RP" },
-                  { bg: "rgba(74,222,128,0.8)",  label: "CM" },
+                  { bg: "rgba(91,156,246,0.8)", label: "RP" },
+                  { bg: "rgba(74,222,128,0.8)", label: "CM" },
                   { bg: "rgba(251,113,133,0.8)", label: "TK" },
                   { bg: "rgba(167,139,250,0.8)", label: "SB" },
                 ].map(a => (
@@ -1139,13 +1139,13 @@ function LandingPage({ onSearch }) {
 
           {/* Hero product preview strip */}
           <div className="fade-up" style={{ animationDelay: "0.42s", marginTop: "36px", display: "flex", gap: "10px", overflowX: "auto", WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory", paddingBottom: "4px" }} aria-label="Live sponsor examples">
-            {SPONSORS.slice(0,3).map(s => {
+            {SPONSORS.slice(0, 3).map(s => {
               const meta = SECTOR_META[s.sector] || { icon: "◉", color: "var(--accent)" };
               return (
                 <button key={s.id} className="hero-preview-card" onClick={() => onSearch("search", s.name)} aria-label={`View ${s.name}`}>
                   <div style={{ width: "32px", height: "32px", borderRadius: "8px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", color: meta.color, flexShrink: 0 }}>{meta.icon}</div>
                   <div style={{ minWidth: 0, textAlign: "left" }}>
-                    <div style={{ fontSize: "12px", fontWeight: "600", color: "var(--hero-text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.name.split(" ").slice(0,2).join(" ")}</div>
+                    <div style={{ fontSize: "12px", fontWeight: "600", color: "var(--hero-text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.name.split(" ").slice(0, 2).join(" ")}</div>
                     <div style={{ fontSize: "10px", color: "rgba(240,234,216,0.5)", fontFamily: "var(--ff-mono)" }}>{s.sector} · {s.town}</div>
                   </div>
                   <div style={{ marginLeft: "auto", flexShrink: 0, fontSize: "9px", fontWeight: "700", padding: "2px 7px", borderRadius: "4px", background: "rgba(74,222,128,0.15)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.2)", fontFamily: "var(--ff-mono)" }}>A</div>
@@ -1160,8 +1160,8 @@ function LandingPage({ onSearch }) {
       <section style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border)" }}>
         <div style={{ maxWidth: "640px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1px", background: "var(--border)" }}>
           {[
-            { val: "120k+",   label: "Licensed sponsors" },
-            { val: "6,240+",  label: "UK cities covered"  },
+            { val: "120k+", label: "Licensed sponsors" },
+            { val: "6,240+", label: "UK cities covered" },
             { val: "£41,700", label: "2026 CoS threshold" },
           ].map(({ val, label }) => (
             <div key={label} style={{ background: "var(--bg-card)", padding: "28px 16px", textAlign: "center" }}>
@@ -1188,7 +1188,7 @@ function LandingPage({ onSearch }) {
             {FEATURES.map((f, i) => (
               <button key={f.id} onClick={() => handleFeatureClick(f)}
                 aria-label={f.live ? `Open ${f.label}` : `Subscribe to ${f.label}`}
-                className={`reveal reveal-delay-${Math.min(i+1,4)}${!f.live ? " reveal-dim" : ""}`}
+                className={`reveal reveal-delay-${Math.min(i + 1, 4)}${!f.live ? " reveal-dim" : ""}`}
                 style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-xl)", padding: "22px 20px", textAlign: "left", cursor: "pointer", transition: "transform 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s cubic-bezier(0.4,0,0.2,1), border-color 0.22s cubic-bezier(0.4,0,0.2,1)", position: "relative", overflow: "hidden" }}
                 onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "var(--sh-raised)"; e.currentTarget.style.borderColor = `var(--${f.colorVar})`; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--border)"; }}
@@ -1235,7 +1235,7 @@ function LandingPage({ onSearch }) {
               { num: "03", icon: "✦", color: "#a78bfa", colorDim: "rgba(167,139,250,0.1)", title: "Ask AI", body: "Not sure which route you qualify for? Ask the AI. It knows the 2026 salary thresholds cold." },
               { num: "04", icon: "➤", color: "#16a34a", colorDim: "rgba(22,163,74,0.1)", title: "Apply", body: "Click any company. Hit Reed, LinkedIn, or Gov.uk directly. No extra steps between you and the job." },
             ].map((s, i) => (
-              <div key={s.num} className={`step-card reveal reveal-delay-${i+1}`} style={{ flex: "1 1 180px" }}>
+              <div key={s.num} className={`step-card reveal reveal-delay-${i + 1}`} style={{ flex: "1 1 180px" }}>
                 <div aria-hidden="true" style={{ position: "absolute", top: "8px", right: "12px", fontFamily: "var(--ff-mono)", fontSize: "64px", fontWeight: "500", color: "var(--accent)", lineHeight: 1, userSelect: "none", opacity: 0.08, letterSpacing: "-0.04em" }}>{s.num}</div>
                 <div style={{ width: "44px", height: "44px", borderRadius: "var(--r-md)", background: s.colorDim, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px", color: s.color, marginBottom: "14px" }}>{s.icon}</div>
                 <div style={{ fontSize: "17px", fontWeight: "700", color: "var(--t-primary)", fontFamily: "var(--ff-display)", letterSpacing: "-0.01em", marginBottom: "8px" }}>{s.title}</div>
@@ -1306,14 +1306,14 @@ function LandingPage({ onSearch }) {
               </thead>
               <tbody>
                 {[
-                  ["Search by sector",           true,  false],
-                  ["Filter by city or region",   true,  false],
-                  ["Salary threshold checker",   true,  false],
-                  ["AI visa Q&A assistant",      true,  false],
-                  ["Job links per company",      true,  false],
-                  ["Bookmark sponsors",          true,  false],
-                  ["Weekly digest alerts (V2)",  true,  false],
-                  ["Official government source", true,  true ],
+                  ["Search by sector", true, false],
+                  ["Filter by city or region", true, false],
+                  ["Salary threshold checker", true, false],
+                  ["AI visa Q&A assistant", true, false],
+                  ["Job links per company", true, false],
+                  ["Bookmark sponsors", true, false],
+                  ["Weekly digest alerts (V2)", true, false],
+                  ["Official government source", true, true],
                 ].map(([feat, sm, gov]) => (
                   <tr key={feat}>
                     <td>{feat}</td>
@@ -1336,15 +1336,19 @@ function LandingPage({ onSearch }) {
               The full job hunt — coming to Pro.
             </h2>
           </div>
-          <div className="reveal" style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
-            {ECOSYSTEM.map((tool) => (
-              <div key={tool.name} style={{ flex: "1 1 150px", maxWidth: "180px", background: tool.status === "live" ? "var(--accent-dim)" : "var(--bg-card)", border: `1px solid ${tool.status === "live" ? "var(--accent-mid)" : "var(--border)"}`, borderRadius: "var(--r-lg)", padding: "18px 16px", textAlign: "center", position: "relative" }}>
-                <div style={{ fontSize: "24px", marginBottom: "8px" }}>{tool.icon}</div>
-                <div style={{ fontSize: "13px", fontWeight: "700", color: "var(--t-primary)", marginBottom: "3px", fontFamily: "var(--ff-display)" }}>{tool.name}</div>
-                <div style={{ fontSize: "11px", color: "var(--t-muted)", lineHeight: "1.4", marginBottom: "10px" }}>{tool.desc}</div>
-                <span style={{ fontSize: "9px", fontWeight: "700", letterSpacing: "0.08em", padding: "3px 8px", borderRadius: "20px", textTransform: "uppercase", fontFamily: "var(--ff-mono)", background: tool.status === "live" ? "var(--c-green-dim)" : tool.status === "suite" ? "rgba(37,99,235,0.1)" : "var(--accent-dim)", color: tool.status === "live" ? "var(--c-green)" : tool.status === "suite" ? "var(--c-blue)" : "var(--accent)", border: `1px solid ${tool.status === "live" ? "var(--c-green-border)" : tool.status === "suite" ? "rgba(37,99,235,0.2)" : "var(--accent-mid)"}` }}>
-                  {tool.status === "live" ? "Live" : tool.status === "suite" ? "In suite" : "Coming"}
-                </span>
+          <div className="reveal" style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            {[
+              { icon: "🔔", label: "Job Alerts", desc: "Your sector hires — you know first" },
+              { icon: "✦", label: "AI Job Scoring", desc: "Every job scored against your profile" },
+              { icon: "📄", label: "CV Generation", desc: "Tailored CV and letter per application" },
+              { icon: "⬡", label: "Browser Extension", desc: "Sponsor status on LinkedIn & Indeed" },
+              { icon: "💬", label: "Telegram Alerts", desc: "Instant match notifications" },
+            ].map(f => (
+              <div key={f.label} style={{ flex: "1 1 160px", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-lg)", padding: "18px 16px" }}>
+                <div style={{ fontSize: "22px", marginBottom: "8px" }}>{f.icon}</div>
+                <div style={{ fontSize: "13px", fontWeight: "700", color: "var(--t-primary)", marginBottom: "3px", fontFamily: "var(--ff-display)" }}>{f.label}</div>
+                <div style={{ fontSize: "11px", color: "var(--t-muted)", lineHeight: "1.4", marginBottom: "10px" }}>{f.desc}</div>
+                <div style={{ fontSize: "9px", fontWeight: "700", letterSpacing: "0.08em", padding: "3px 8px", borderRadius: "20px", display: "inline-block", background: "var(--accent-dim)", color: "var(--accent)", border: "1px solid var(--accent-mid)", textTransform: "uppercase", fontFamily: "var(--ff-mono)" }}>Pro</div>
               </div>
             ))}
           </div>
@@ -1392,7 +1396,7 @@ function LandingPage({ onSearch }) {
                 Stop applying blind.
               </h2>
               <p style={{ fontSize: "14px", color: "var(--hero-muted)", lineHeight: "1.75", marginBottom: "28px", maxWidth: "400px" }}>
-                Job alerts, CV generation, Telegram notifications — all in build. First 200 sign-ups get Pro free for 3 months.
+                Job alerts, CV generation, Telegram notifications — all in build. Sign up to get notified when they ship.
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "28px" }}>
                 {FEATURES.filter(f => !f.live).slice(0, 4).map(f => (
@@ -1442,8 +1446,8 @@ function LandingPage({ onSearch }) {
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
               <div style={{ width: "24px", height: "24px", borderRadius: "6px", background: "linear-gradient(135deg, var(--accent), var(--accent-hi))", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <svg width="10" height="12" viewBox="0 0 16 18" fill="none" aria-hidden="true">
-                  <path d="M8 0C4.686 0 2 2.686 2 6c0 4.5 6 12 6 12s6-7.5 6-12c0-3.314-2.686-6-6-6z" fill="white" fillOpacity="0.95"/>
-                  <circle cx="8" cy="6" r="2.2" fill="rgba(0,0,0,0.35)"/>
+                  <path d="M8 0C4.686 0 2 2.686 2 6c0 4.5 6 12 6 12s6-7.5 6-12c0-3.314-2.686-6-6-6z" fill="white" fillOpacity="0.95" />
+                  <circle cx="8" cy="6" r="2.2" fill="rgba(0,0,0,0.35)" />
                 </svg>
               </div>
               <span style={{ fontFamily: "var(--ff-display)", fontSize: "16px", fontWeight: "600", color: "var(--t-primary)" }}>SponsorMap</span>
@@ -1504,15 +1508,20 @@ function LandingPage({ onSearch }) {
 
 function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
   const [open, setOpen] = useState(false);
-  const meta     = SECTOR_META[sponsor.sector] || { icon: "◉", color: "var(--t-muted)" };
+  const meta = SECTOR_META[sponsor.sector] || { icon: "◉", color: "var(--t-muted)" };
   const isARated = sponsor.rating === "A";
-  const reedUrl     = `https://www.reed.co.uk/jobs?keywords=${encodeURIComponent(sponsor.name.split(" ")[0])}&location=${encodeURIComponent(sponsor.town)}`;
+  const reedUrl = `https://www.reed.co.uk/jobs?keywords=${encodeURIComponent(sponsor.name.split(" ")[0])}&location=${encodeURIComponent(sponsor.town)}`;
   const linkedinUrl = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(sponsor.name)}&location=${encodeURIComponent(sponsor.town)}`;
 
   return (
     <div className="card-enter" style={{ animationDelay: `${Math.min(index * 0.045, 0.5)}s` }}>
-      <div
+      <a
+        href={reedUrl}
+        target="_blank"
+        rel="noopener noreferrer"
         style={{
+          display: "block",
+          textDecoration: "none",
           background: open ? "var(--bg-card-hi)" : "var(--bg-card)",
           border: `1px solid ${open ? "var(--accent-mid)" : "var(--border)"}`,
           borderRadius: open ? "var(--r-lg) var(--r-lg) 0 0" : "var(--r-lg)",
@@ -1520,9 +1529,10 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
           borderLeft: `3px solid ${meta.color}`,
           paddingLeft: "14px",
           transition: "background var(--ease), border-color var(--ease), box-shadow var(--ease)",
+          cursor: "pointer",
         }}
-        onMouseEnter={e => { if (!open) { e.currentTarget.style.background = "var(--bg-card-hi)"; e.currentTarget.style.boxShadow = `0 4px 20px rgba(0,0,0,0.15), inset 0 0 0 0 transparent`; } }}
-        onMouseLeave={e => { if (!open) { e.currentTarget.style.background = "var(--bg-card)"; e.currentTarget.style.boxShadow = "none"; } }}
+        onMouseEnter={e => { e.currentTarget.style.background = "var(--bg-card-hi)"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.15)"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = "var(--bg-card)"; e.currentTarget.style.boxShadow = "none"; }}
       >
         {/* Top row: icon + name + rating */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
@@ -1572,12 +1582,12 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
             {isBookmarked ? "★" : "☆"}
           </button>
         </div>
-      </div>
+      </a>
 
       {/* Expanded: job links only */}
       {open && (
         <div style={{ background: "var(--bg-card-hi)", border: "1px solid var(--accent-mid)", borderTop: "1px solid var(--border)", borderRadius: "0 0 var(--r-lg) var(--r-lg)", padding: "12px 16px", display: "flex", gap: "8px", flexWrap: "wrap", animation: "fadeIn 0.18s ease forwards" }}>
-          <a href={reedUrl}     target="_blank" rel="noopener noreferrer" className="act">Reed Jobs →</a>
+          <a href={reedUrl} target="_blank" rel="noopener noreferrer" className="act">Reed Jobs →</a>
           <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="act">LinkedIn →</a>
           <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer" className="act">Verify Gov.uk →</a>
         </div>
@@ -1588,11 +1598,11 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
 
 function ActiveFilters({ search, sectors, location, region, route, onClear }) {
   const pills = [
-    ...(search   ? [{ key: "q",   label: `"${search}"` }] : []),
+    ...(search ? [{ key: "q", label: `"${search}"` }] : []),
     ...sectors.map(s => ({ key: s, label: s })),
-    ...(location ? [{ key: "loc", label: location }]       : []),
-    ...(region   ? [{ key: "reg", label: region }]         : []),
-    ...(route    ? [{ key: "rte", label: route }]          : []),
+    ...(location ? [{ key: "loc", label: location }] : []),
+    ...(region ? [{ key: "reg", label: region }] : []),
+    ...(route ? [{ key: "rte", label: route }] : []),
   ];
   if (!pills.length) return null;
   return (
@@ -1609,18 +1619,18 @@ function ActiveFilters({ search, sectors, location, region, route, onClear }) {
 }
 
 function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
-  const [search,      setSearch]      = useState(initialSearch || "");
-  const [debouncedQ,  setDebouncedQ]  = useState(initialSearch || "");
-  const [sectors,     setSectors]     = useState(initialSector ? [initialSector] : []);
-  const [location,    setLocation]    = useState("");
-  const [region,      setRegion]      = useState("");
-  const [route,       setRoute]       = useState("");
-  const [page,        setPage]        = useState(1);
-  const [loading,     setLoading]     = useState(false);
-  const [view,        setView]        = useState("search"); // "search" | "bookmarks"
+  const [search, setSearch] = useState(initialSearch || "");
+  const [debouncedQ, setDebouncedQ] = useState(initialSearch || "");
+  const [sectors, setSectors] = useState(initialSector ? [initialSector] : []);
+  const [location, setLocation] = useState("");
+  const [region, setRegion] = useState("");
+  const [route, setRoute] = useState("");
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [view, setView] = useState("search"); // "search" | "bookmarks"
   const { bookmarks, toggle, isBookmarked } = useBookmarks();
   const debounceRef = useRef(null);
-  const PAGE_SIZE   = 10;
+  const PAGE_SIZE = 10;
 
   // 300ms debounce on search input
   useEffect(() => {
@@ -1638,8 +1648,8 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
   useEffect(() => { setPage(1); }, [sectors, location, region, route]);
 
   const toggleSector = useCallback(s => setSectors(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s]), []);
-  const clearAll     = useCallback(() => { setSearch(""); setDebouncedQ(""); setSectors([]); setLocation(""); setRegion(""); setRoute(""); setPage(1); }, []);
-  const hasFilters   = !!(debouncedQ || sectors.length || location || region || route);
+  const clearAll = useCallback(() => { setSearch(""); setDebouncedQ(""); setSectors([]); setLocation(""); setRegion(""); setRoute(""); setPage(1); }, []);
+  const hasFilters = !!(debouncedQ || sectors.length || location || region || route);
 
   const filtered = useMemo(() => {
     const q = debouncedQ.toLowerCase();
@@ -1647,18 +1657,18 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
       const sponsorRegion = COUNTY_TO_REGION[c.county] ||
         (c.county && c.county !== "Not set" && c.county !== "NULL" ? "England" : "England");
       return (
-        (!debouncedQ     || c.name.toLowerCase().includes(q) || c.town.toLowerCase().includes(q) || c.county.toLowerCase().includes(q)) &&
+        (!debouncedQ || c.name.toLowerCase().includes(q) || c.town.toLowerCase().includes(q) || c.county.toLowerCase().includes(q)) &&
         (!sectors.length || sectors.includes(c.sector)) &&
-        (!location       || c.town === location) &&
-        (!region         || sponsorRegion === region) &&
-        (!route          || c.route === route)
+        (!location || c.town === location) &&
+        (!region || sponsorRegion === region) &&
+        (!route || c.route === route)
       );
     });
   }, [debouncedQ, sectors, location, region, route]);
 
-  const totalPages  = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated   = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const filterKey   = `${debouncedQ}|${sectors.join(",")}|${location}|${region}|${route}`;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const filterKey = `${debouncedQ}|${sectors.join(",")}|${location}|${region}|${route}`;
 
   return (
     <div style={{ maxWidth: "860px", margin: "0 auto", padding: "32px 20px 120px", position: "relative", zIndex: 1 }}>
@@ -1736,8 +1746,8 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
                 color: location === city ? "var(--accent)" : "var(--t-muted)",
                 cursor: "pointer", transition: "all var(--ease)", whiteSpace: "nowrap",
               }}
-              onMouseEnter={e => { if (location !== city) { e.currentTarget.style.borderColor = "var(--border-hi)"; e.currentTarget.style.color = "var(--t-primary)"; }}}
-              onMouseLeave={e => { if (location !== city) { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--t-muted)"; }}}
+              onMouseEnter={e => { if (location !== city) { e.currentTarget.style.borderColor = "var(--border-hi)"; e.currentTarget.style.color = "var(--t-primary)"; } }}
+              onMouseLeave={e => { if (location !== city) { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--t-muted)"; } }}
             >{city}</button>
           ))}
           {location && (
@@ -1824,26 +1834,26 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
           {loading
             ? Array.from({ length: 5 }).map((_, i) => <div key={i} role="listitem"><SkeletonCard /></div>)
             : paginated.length > 0
-            ? paginated.map((s, i) => (
+              ? paginated.map((s, i) => (
                 <div key={`${s.id}-${filterKey}-${page}`} role="listitem">
                   <SponsorCard sponsor={s} index={i} isBookmarked={isBookmarked(s.id)} onBookmark={toggle} />
                 </div>
               ))
-            : (
-              <div style={{ textAlign: "center", padding: "60px 24px", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-xl)", animation: "fadeIn 0.3s ease forwards" }}>
-                <div style={{ fontSize: "36px", marginBottom: "14px", opacity: 0.35 }} aria-hidden="true">⌕</div>
-                <div style={{ fontFamily: "var(--ff-display)", fontSize: "18px", color: "var(--t-primary)", marginBottom: "8px" }}>No sponsors found</div>
-                <div style={{ fontSize: "13px", color: "var(--t-muted)", marginBottom: "22px", lineHeight: "1.6" }}>
-                  {sectors.length > 0 && location ? `No ${sectors.join(" or ")} sponsors found in ${location}. Try adjusting your filters.`
-                    : sectors.length > 0 && region  ? `No ${sectors.join(" or ")} sponsors found in ${region}. Try a different sector.`
-                    : sectors.length > 0             ? `No ${sectors.join(" or ")} sponsors found. Try a different sector.`
-                    : location                       ? `No sponsors found in ${location}. Try a different city.`
-                    : region                         ? `No sponsors found in ${region}. Try a different region.`
-                    : "No results match your search. Try different keywords or ask the AI."}
+              : (
+                <div style={{ textAlign: "center", padding: "60px 24px", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-xl)", animation: "fadeIn 0.3s ease forwards" }}>
+                  <div style={{ fontSize: "36px", marginBottom: "14px", opacity: 0.35 }} aria-hidden="true">⌕</div>
+                  <div style={{ fontFamily: "var(--ff-display)", fontSize: "18px", color: "var(--t-primary)", marginBottom: "8px" }}>No sponsors found</div>
+                  <div style={{ fontSize: "13px", color: "var(--t-muted)", marginBottom: "22px", lineHeight: "1.6" }}>
+                    {sectors.length > 0 && location ? `No ${sectors.join(" or ")} sponsors found in ${location}. Try adjusting your filters.`
+                      : sectors.length > 0 && region ? `No ${sectors.join(" or ")} sponsors found in ${region}. Try a different sector.`
+                        : sectors.length > 0 ? `No ${sectors.join(" or ")} sponsors found. Try a different sector.`
+                          : location ? `No sponsors found in ${location}. Try a different city.`
+                            : region ? `No sponsors found in ${region}. Try a different region.`
+                              : "No results match your search. Try different keywords or ask the AI."}
+                  </div>
+                  <button className="btn-p" onClick={() => setShowAI(true)}><span style={{ fontSize: "10px" }}>✦</span> Ask AI</button>
                 </div>
-                <button className="btn-p" onClick={() => setShowAI(true)}><span style={{ fontSize: "10px" }}>✦</span> Ask AI</button>
-              </div>
-            )
+              )
           }
         </div>
 
@@ -1897,7 +1907,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
         <strong style={{ color: "var(--t-secondary)" }}>Data sourced from the Home Office Register of Licensed Sponsors.</strong>
         {" "}Verify status on the{" "}
         <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer"
-           style={{ color: "var(--accent)", fontWeight: "500" }}>official Home Office register</a>{" "}before applying.
+          style={{ color: "var(--accent)", fontWeight: "500" }}>official Home Office register</a>{" "}before applying.
       </div>
     </div>
   );
@@ -1907,10 +1917,10 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
 
 function SalaryChecker({ onSearch }) {
   const THRESHOLDS = [
-    { label: "General threshold",      amount: "£41,700", note: "Most Skilled Worker roles",              color: "#16a34a" },
-    { label: "New entrant rate",        amount: "£33,400", note: "Under 26, or switching from Student visa", color: "#2563eb" },
-    { label: "Health & Care Worker",    amount: "£29,000", note: "NHS and care sector roles",              color: "#e11d48" },
-    { label: "Shortage occupation",     amount: "£30,960", note: "Roles on the shortage list",             color: "#d97706" },
+    { label: "General threshold", amount: "£41,700", note: "Most Skilled Worker roles", color: "#16a34a" },
+    { label: "New entrant rate", amount: "£33,400", note: "Under 26, or switching from Student visa", color: "#2563eb" },
+    { label: "Health & Care Worker", amount: "£29,000", note: "NHS and care sector roles", color: "#e11d48" },
+    { label: "Shortage occupation", amount: "£30,960", note: "Roles on the shortage list", color: "#d97706" },
   ];
 
   const [salary, setSalary] = useState("");
@@ -1918,7 +1928,7 @@ function SalaryChecker({ onSearch }) {
 
   const getStatus = (threshold) => {
     if (!numSalary) return null;
-    return numSalary >= parseFloat(threshold.replace("£","").replace(",","")) ? "pass" : "fail";
+    return numSalary >= parseFloat(threshold.replace("£", "").replace(",", "")) ? "pass" : "fail";
   };
 
   return (
@@ -1961,7 +1971,7 @@ function SalaryChecker({ onSearch }) {
       {/* Threshold cards */}
       <div style={{ display: "flex", flexDirection: "column", gap: "10px", animation: "fadeUp 0.5s ease 0.14s forwards", opacity: 0 }}>
         {THRESHOLDS.map(t => {
-          const thresholdNum = parseFloat(t.amount.replace("£","").replace(",",""));
+          const thresholdNum = parseFloat(t.amount.replace("£", "").replace(",", ""));
           const status = getStatus(t.amount);
           return (
             <div key={t.label} style={{ background: "var(--bg-card)", border: `1px solid ${status === "pass" ? "var(--c-green-border)" : status === "fail" ? "rgba(225,29,72,0.2)" : "var(--border)"}`, borderRadius: "var(--r-lg)", padding: "18px 20px", display: "flex", alignItems: "center", gap: "16px", transition: "all var(--ease)" }}>
@@ -2175,17 +2185,17 @@ class ErrorBoundary extends React.Component {
 // ─── App shell ────────────────────────────────────────────────────────────────
 
 export default function SponsorMap() {
-  const [view,       setView]       = useState("home");
-  const [dark,       setDark]       = useState(() => {
+  const [view, setView] = useState("home");
+  const [dark, setDark] = useState(() => {
     try { return localStorage.getItem("sm-theme") === "dark"; } catch { return false; }
   });
-  const [showAI,     setShowAI]     = useState(false);
+  const [showAI, setShowAI] = useState(false);
   const [initSearch, setInitSearch] = useState("");
   const [initSector, setInitSector] = useState("");
 
   // Persist theme choice across sessions
   useEffect(() => {
-    try { localStorage.setItem("sm-theme", dark ? "dark" : "light"); } catch {}
+    try { localStorage.setItem("sm-theme", dark ? "dark" : "light"); } catch { }
   }, [dark]);
 
   // Push history entry on every view change so back button works within the app
@@ -2224,31 +2234,31 @@ export default function SponsorMap() {
 
   return (
     <ErrorBoundary>
-    <div data-theme={dark ? "dark" : "light"} style={{ minHeight: "100vh", background: "var(--bg)", position: "relative" }}>
-      <style>{CSS}</style>
-      {view === "search" && <Background />}
-      {showAI && <AIPanel onClose={() => setShowAI(false)} />}
+      <div data-theme={dark ? "dark" : "light"} style={{ minHeight: "100vh", background: "var(--bg)", position: "relative" }}>
+        <style>{CSS}</style>
+        {view === "search" && <Background />}
+        {showAI && <AIPanel onClose={() => setShowAI(false)} />}
 
-      <AppHeader dark={dark} setDark={setDark} onSearch={handleNav} currentView={view} />
+        <AppHeader dark={dark} setDark={setDark} onSearch={handleNav} currentView={view} />
 
-      {/* Global floating AI button — visible on every view */}
-      <div style={{ position: "fixed", bottom: "28px", right: "24px", zIndex: 200 }}>
-        <button
-          className="btn-p"
-          onClick={() => setShowAI(true)}
-          aria-label="Ask the AI assistant"
-          style={{ borderRadius: "50px", padding: "13px 22px", fontSize: "13px", boxShadow: "0 4px 24px var(--accent-mid)", display: "flex", alignItems: "center", gap: "6px" }}
-        >
-          <span style={{ fontSize: "11px" }}>✦</span> Ask AI
-        </button>
+        {/* Global floating AI button — visible on every view */}
+        <div style={{ position: "fixed", bottom: "28px", right: "24px", zIndex: 200 }}>
+          <button
+            className="btn-p"
+            onClick={() => setShowAI(true)}
+            aria-label="Ask the AI assistant"
+            style={{ borderRadius: "50px", padding: "13px 22px", fontSize: "13px", boxShadow: "0 4px 24px var(--accent-mid)", display: "flex", alignItems: "center", gap: "6px" }}
+          >
+            <span style={{ fontSize: "11px" }}>✦</span> Ask AI
+          </button>
+        </div>
+
+        {view === "home" && <LandingPage onSearch={handleNav} />}
+        {view === "search" && <SearchTool initialSearch={initSearch} initialSector={initSector} showAI={showAI} setShowAI={setShowAI} />}
+        {view === "salary" && <SalaryChecker onSearch={handleNav} />}
+        {view === "about" && <AboutPage onSearch={handleNav} />}
+        {view === "privacy" && <PrivacyPage onSearch={handleNav} />}
       </div>
-
-      {view === "home"    && <LandingPage onSearch={handleNav} />}
-      {view === "search"  && <SearchTool initialSearch={initSearch} initialSector={initSector} showAI={showAI} setShowAI={setShowAI} />}
-      {view === "salary"  && <SalaryChecker onSearch={handleNav} />}
-      {view === "about"   && <AboutPage onSearch={handleNav} />}
-      {view === "privacy" && <PrivacyPage onSearch={handleNav} />}
-    </div>
     </ErrorBoundary>
   );
 }
