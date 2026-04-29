@@ -46,7 +46,7 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "SponsorMap <onboarding@resend.dev>",
+          from: "SponsorMap <hello@sponsormap.engtx.co.uk>",
           to: cleaned,
           subject: "You're on the SponsorMap list",
           html: "<p>You're on the list. We'll email you when SponsorMap Pro goes live.</p><p><a href='https://sponsormap.engtx.co.uk'>Search 120,000+ sponsors now</a></p>",
