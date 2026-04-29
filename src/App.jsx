@@ -1515,13 +1515,9 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
 
   return (
     <div className="card-enter" style={{ animationDelay: `${Math.min(index * 0.045, 0.5)}s` }}>
-      <a
-        href={reedUrl}
-        target="_blank"
-        rel="noopener noreferrer"
+      <div
+        onClick={() => setOpen(o => !o)}
         style={{
-          display: "block",
-          textDecoration: "none",
           background: open ? "var(--bg-card-hi)" : "var(--bg-card)",
           border: `1px solid ${open ? "var(--accent-mid)" : "var(--border)"}`,
           borderRadius: open ? "var(--r-lg) var(--r-lg) 0 0" : "var(--r-lg)",
@@ -1531,8 +1527,8 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
           transition: "background var(--ease), border-color var(--ease), box-shadow var(--ease)",
           cursor: "pointer",
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = "var(--bg-card-hi)"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.15)"; }}
-        onMouseLeave={e => { e.currentTarget.style.background = "var(--bg-card)"; e.currentTarget.style.boxShadow = "none"; }}
+        onMouseEnter={e => { if (!open) { e.currentTarget.style.background = "var(--bg-card-hi)"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.15)"; } }}
+        onMouseLeave={e => { if (!open) { e.currentTarget.style.background = "var(--bg-card)"; e.currentTarget.style.boxShadow = "none"; } }}
       >
         {/* Top row: icon + name + rating */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
@@ -1582,7 +1578,7 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
             {isBookmarked ? "★" : "☆"}
           </button>
         </div>
-      </a>
+      </div>
 
       {/* Expanded: job links only */}
       {open && (
