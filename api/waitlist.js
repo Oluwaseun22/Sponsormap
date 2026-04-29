@@ -104,7 +104,6 @@ export default async function handler(req, res) {
               </tr></table>
             </td></tr>
           </table>
-          <p style="font-size:11px;color:#9a8e84;margin:16px 0 0;font-family:monospace;">First 200 sign-ups get Pro free for 3 months at launch.</p>
         </td></tr>
       </table>
       <table cellpadding="0" cellspacing="0">
