@@ -1694,7 +1694,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
 
         {/* City */}
         <div style={{ flex: "1 1 100px", borderRight: "1px solid var(--border)" }}>
-          <select value={location} onChange={e => { setLocation(e.target.value); if (e.target.value) setRegion(""); }}
+          <select value={location} onChange={e => setLocation(e.target.value)}
             aria-label="Filter by city"
             style={{ width: "100%", height: "100%", background: "transparent", border: "none", outline: "none", padding: "14px 28px 14px 14px", fontSize: "13px", color: location ? "var(--t-primary)" : "var(--t-muted)", fontFamily: "var(--ff-ui)", cursor: "pointer", backgroundImage: "var(--select-arrow)", backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", appearance: "none", WebkitAppearance: "none" }}>
             <option value="">All cities</option>
@@ -1704,7 +1704,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
 
         {/* Region */}
         <div style={{ flex: "1 1 100px", borderRight: "1px solid var(--border)" }}>
-          <select value={region} onChange={e => { setRegion(e.target.value); if (e.target.value) setLocation(""); }}
+          <select value={region} onChange={e => setRegion(e.target.value)}
             aria-label="Filter by region"
             style={{ width: "100%", height: "100%", background: "transparent", border: "none", outline: "none", padding: "14px 28px 14px 14px", fontSize: "13px", color: region ? "var(--t-primary)" : "var(--t-muted)", fontFamily: "var(--ff-ui)", cursor: "pointer", backgroundImage: "var(--select-arrow)", backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", appearance: "none", WebkitAppearance: "none" }}>
             <option value="">All regions</option>
@@ -1724,7 +1724,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
           <span style={{ fontSize: "11px", color: "var(--t-muted)", fontWeight: "500", flexShrink: 0 }}>Popular:</span>
           {POPULAR_CITIES.map(city => (
-            <button key={city} onClick={() => { setLocation(city); setRegion(""); }}
+            <button key={city} onClick={() => setLocation(city)}
               aria-label={`Filter by ${city}`}
               style={{
                 padding: "4px 12px", borderRadius: "20px", fontSize: "11px", fontWeight: "500",
