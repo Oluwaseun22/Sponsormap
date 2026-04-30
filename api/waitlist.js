@@ -2,10 +2,22 @@ import pg from "pg";
 
 const { Client } = pg;
 
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+const RATE_LIMIT_MAX    = 5;
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
+
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket?.remoteAddress || "unknown";
+  const now = Date.now();
+  const record = rateLimitMap.get(ip) || { count: 0, windowStart: now };
+  if (now - record.windowStart > RATE_LIMIT_WINDOW) { record.count = 0; record.windowStart = now; }
+  record.count++;
+  rateLimitMap.set(ip, record);
+  if (record.count > RATE_LIMIT_MAX) return res.status(429).json({ error: "Too many requests. Please wait." });
 
   const { email, source = "waitlist" } = req.body || {};
 

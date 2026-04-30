@@ -1,26 +1,35 @@
 // Vercel serverless — ESM
 // Queries Typesense and returns paginated sponsor results.
 
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000;
+const RATE_LIMIT_MAX    = 60;
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "https://sponsormap.engtx.co.uk");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
 
-  const {
-    q = "",
-    sector = "",
-    town = "",
-    region = "",
-    route = "",
-    rating = "",
-    status = "",
-    page = "1",
-    perPage = "10",
-  } = req.query;
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket?.remoteAddress || "unknown";
+  const now = Date.now();
+  const record = rateLimitMap.get(ip) || { count: 0, windowStart: now };
+  if (now - record.windowStart > RATE_LIMIT_WINDOW) { record.count = 0; record.windowStart = now; }
+  record.count++;
+  rateLimitMap.set(ip, record);
+  if (record.count > RATE_LIMIT_MAX) return res.status(429).json({ error: "Too many requests. Please wait." });
 
-  const pageNum = Math.max(1, parseInt(page, 10) || 1);
-  const perPageNum = Math.min(50, Math.max(1, parseInt(perPage, 10) || 10));
+  const raw = req.query;
+  const q       = String(raw.q      || "").slice(0, 100);
+  const sector  = String(raw.sector || "").slice(0, 200);
+  const town    = String(raw.town   || "").slice(0, 100);
+  const region  = String(raw.region || "").slice(0, 50);
+  const route   = String(raw.route  || "");
+  const rating  = String(raw.rating || "");
+  const status  = String(raw.status || "");
+
+  const pageNum    = Math.min(1000, Math.max(1, parseInt(raw.page,    10) || 1));
+  const perPageNum = Math.min(  25, Math.max(1, parseInt(raw.perPage, 10) || 10));
 
   const host = process.env.TYPESENSE_HOST;
   const apiKey = process.env.TYPESENSE_API_KEY;
