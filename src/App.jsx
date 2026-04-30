@@ -1,33 +1,12 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const SPONSORS = [
-  { id: 1, name: "HSBC UK Bank plc", town: "Birmingham", county: "West Midlands", sector: "Finance", rating: "A", route: "Skilled Worker" },
-  { id: 2, name: "Google UK Limited", town: "London", county: "Greater London", sector: "Technology", rating: "A", route: "Skilled Worker" },
-  { id: 3, name: "NHS England", town: "Leeds", county: "West Yorkshire", sector: "Healthcare", rating: "A", route: "Health & Care Worker" },
-  { id: 4, name: "Arup Group Limited", town: "Leeds", county: "West Yorkshire", sector: "Engineering", rating: "A", route: "Skilled Worker" },
-  { id: 5, name: "Deloitte LLP", town: "London", county: "Greater London", sector: "Finance", rating: "A", route: "Skilled Worker" },
-  { id: 6, name: "Bradford Teaching Hospitals NHS FT", town: "Bradford", county: "West Yorkshire", sector: "Healthcare", rating: "A", route: "Health & Care Worker" },
-  { id: 7, name: "Lloyds Banking Group plc", town: "Leeds", county: "West Yorkshire", sector: "Finance", rating: "A", route: "Skilled Worker" },
-  { id: 8, name: "Amazon UK Services Ltd", town: "London", county: "Greater London", sector: "Technology", rating: "A", route: "Skilled Worker" },
-  { id: 9, name: "Mott MacDonald Limited", town: "Leeds", county: "West Yorkshire", sector: "Engineering", rating: "A", route: "Skilled Worker" },
-  { id: 10, name: "Capita Business Services Ltd", town: "Bradford", county: "West Yorkshire", sector: "Technology", rating: "A", route: "Skilled Worker" },
-  { id: 11, name: "PwC UK", town: "London", county: "Greater London", sector: "Finance", rating: "A", route: "Skilled Worker" },
-  { id: 12, name: "Infosys BPO Limited", town: "London", county: "Greater London", sector: "Technology", rating: "A", route: "Skilled Worker" },
-  { id: 13, name: "University of Leeds", town: "Leeds", county: "West Yorkshire", sector: "Education", rating: "A", route: "Skilled Worker" },
-  { id: 14, name: "Kirklees Council", town: "Bradford", county: "West Yorkshire", sector: "Education", rating: "A", route: "Skilled Worker" },
-  { id: 15, name: "Asda Stores Limited", town: "Leeds", county: "West Yorkshire", sector: "Retail", rating: "A", route: "Skilled Worker" },
-  { id: 16, name: "Accenture (UK) Limited", town: "London", county: "Greater London", sector: "Technology", rating: "A", route: "Skilled Worker" },
-  { id: 17, name: "KPMG LLP", town: "London", county: "Greater London", sector: "Finance", rating: "A", route: "Skilled Worker" },
-  { id: 18, name: "British Airways plc", town: "London", county: "Greater London", sector: "Transport", rating: "A", route: "Skilled Worker" },
-  { id: 19, name: "Sheffield Teaching Hospitals NHS FT", town: "Sheffield", county: "South Yorkshire", sector: "Healthcare", rating: "A", route: "Health & Care Worker" },
-  { id: 20, name: "University of Manchester", town: "Manchester", county: "Greater Manchester", sector: "Education", rating: "A", route: "Skilled Worker" },
-  { id: 21, name: "JPMorgan Chase Bank NA", town: "Glasgow", county: "Glasgow City", sector: "Finance", rating: "A", route: "Skilled Worker" },
-  { id: 22, name: "University of Edinburgh", town: "Edinburgh", county: "City of Edinburgh", sector: "Education", rating: "A", route: "Skilled Worker" },
-  { id: 23, name: "Barclays Bank plc", town: "Glasgow", county: "Glasgow City", sector: "Finance", rating: "A", route: "Skilled Worker" },
-  { id: 24, name: "CGI IT UK Limited", town: "Bristol", county: "City of Bristol", sector: "Technology", rating: "A", route: "Skilled Worker" },
-  { id: 25, name: "Newcastle Upon Tyne Hospitals NHS FT", town: "Newcastle", county: "Tyne and Wear", sector: "Healthcare", rating: "A", route: "Health & Care Worker" },
+// Three static examples for the landing page hero preview strip only.
+const HERO_SPONSORS = [
+  { id: "hsbc-uk-bank-plc", name: "HSBC UK Bank plc", town: "Birmingham", sector: "Finance", rating: "A" },
+  { id: "google-uk-limited", name: "Google UK Limited", town: "London", sector: "Technology", rating: "A" },
+  { id: "nhs-england", name: "NHS England", town: "Leeds", sector: "Healthcare", rating: "A" },
 ];
 
 const SECTORS = ["Technology", "Finance", "Healthcare", "Engineering", "Education", "Retail", "Transport"];
@@ -1139,7 +1118,7 @@ function LandingPage({ onSearch }) {
 
           {/* Hero product preview strip */}
           <div className="fade-up" style={{ animationDelay: "0.42s", marginTop: "36px", display: "flex", gap: "10px", overflowX: "auto", WebkitOverflowScrolling: "touch", scrollSnapType: "x mandatory", paddingBottom: "4px" }} aria-label="Live sponsor examples">
-            {SPONSORS.slice(0, 3).map(s => {
+            {HERO_SPONSORS.map(s => {
               const meta = SECTOR_META[s.sector] || { icon: "◉", color: "var(--accent)" };
               return (
                 <button key={s.id} className="hero-preview-card" onClick={() => onSearch("search", s.name)} aria-label={`View ${s.name}`}>
@@ -1622,7 +1601,11 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
   const [region, setRegion] = useState("");
   const [route, setRoute] = useState("");
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [results, setResults] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState(null);
   const [view, setView] = useState("search"); // "search" | "bookmarks"
   const { bookmarks, toggle, isBookmarked } = useBookmarks();
   const debounceRef = useRef(null);
@@ -1631,39 +1614,47 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
   // 300ms debounce on search input
   useEffect(() => {
     clearTimeout(debounceRef.current);
-    setLoading(true);
     debounceRef.current = setTimeout(() => {
       setDebouncedQ(search);
       setPage(1);
-      setLoading(false);
     }, 300);
     return () => clearTimeout(debounceRef.current);
   }, [search]);
 
-  // Reset page when any filter changes
+  // Reset page when filters change
   useEffect(() => { setPage(1); }, [sectors, location, region, route]);
+
+  // Fetch sponsors from /api/search
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    const params = new URLSearchParams({ page: String(page), perPage: String(PAGE_SIZE) });
+    if (debouncedQ) params.set("q", debouncedQ);
+    if (sectors.length) params.set("sector", sectors.join(","));
+    if (location) params.set("town", location);
+    if (region) params.set("region", region);
+    if (route) params.set("route", route);
+    fetch(`/api/search?${params}`)
+      .then(r => r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))
+      .then(data => {
+        if (cancelled) return;
+        setResults(data.results || []);
+        setTotal(data.total || 0);
+        setTotalPages(data.totalPages || 1);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setError("Search failed. Please try again.");
+        setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [debouncedQ, sectors, location, region, route, page]);
 
   const toggleSector = useCallback(s => setSectors(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s]), []);
   const clearAll = useCallback(() => { setSearch(""); setDebouncedQ(""); setSectors([]); setLocation(""); setRegion(""); setRoute(""); setPage(1); }, []);
   const hasFilters = !!(debouncedQ || sectors.length || location || region || route);
-
-  const filtered = useMemo(() => {
-    const q = debouncedQ.toLowerCase();
-    return SPONSORS.filter(c => {
-      const sponsorRegion = COUNTY_TO_REGION[c.county] ||
-        (c.county && c.county !== "Not set" && c.county !== "NULL" ? "England" : "England");
-      return (
-        (!debouncedQ || c.name.toLowerCase().includes(q) || c.town.toLowerCase().includes(q) || c.county.toLowerCase().includes(q)) &&
-        (!sectors.length || sectors.includes(c.sector)) &&
-        (!location || c.town === location) &&
-        (!region || sponsorRegion === region) &&
-        (!route || c.route === route)
-      );
-    });
-  }, [debouncedQ, sectors, location, region, route]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const filterKey = `${debouncedQ}|${sectors.join(",")}|${location}|${region}|${route}`;
 
   return (
@@ -1820,7 +1811,9 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
           <span className="mono-label" style={{ color: "var(--t-muted)" }}>
             {loading
               ? "Searching..."
-              : <><strong style={{ color: "var(--t-primary)", fontFamily: "var(--ff-mono)" }}>{filtered.length}</strong>{" "}sponsor{filtered.length !== 1 ? "s" : ""} found{totalPages > 1 && <span> · page {page} of {totalPages}</span>}</>
+              : error
+                ? <span style={{ color: "var(--c-rose)" }}>{error}</span>
+                : <><strong style={{ color: "var(--t-primary)", fontFamily: "var(--ff-mono)" }}>{total.toLocaleString()}</strong>{" "}sponsor{total !== 1 ? "s" : ""} found{totalPages > 1 && <span> · page {page} of {totalPages.toLocaleString()}</span>}</>
             }
           </span>
           {hasFilters && <button onClick={clearAll} className="btn-g" style={{ padding: "5px 12px", fontSize: "11px" }}>✕ Clear all</button>}
@@ -1829,8 +1822,8 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }} role="list" aria-label="Sponsor results">
           {loading
             ? Array.from({ length: 5 }).map((_, i) => <div key={i} role="listitem"><SkeletonCard /></div>)
-            : paginated.length > 0
-              ? paginated.map((s, i) => (
+            : results.length > 0
+              ? results.map((s, i) => (
                 <div key={`${s.id}-${filterKey}-${page}`} role="listitem">
                   <SponsorCard sponsor={s} index={i} isBookmarked={isBookmarked(s.id)} onBookmark={toggle} />
                 </div>
