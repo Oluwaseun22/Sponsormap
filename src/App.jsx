@@ -757,7 +757,7 @@ const FEATURES = [
     colorDimVar: "rgba(37,99,235,0.12)",
     label: "Sponsor Search",
     tagline: "Find any licensed sponsor instantly",
-    bullets: ["141,000+ verified companies", "Search by name or location", "Home Office register data"],
+    bullets: ["125,000+ verified companies", "Search by name or location", "Home Office register data"],
     action: "search",
   },
   {
@@ -1079,7 +1079,7 @@ function LandingPage({ onSearch }) {
 
           {/* Sub */}
           <p className="fade-up" style={{ animationDelay: "0.15s", fontSize: "16px", color: "var(--hero-muted)", lineHeight: "1.75", maxWidth: "500px", margin: "0 auto 36px" }}>
-            Search 141,000+ companies licensed by the Home Office to sponsor your visa. Filter by city, sector, and route.
+            Search 125,000+ companies licensed by the Home Office to sponsor your visa. Filter by city, sector, and route.
           </p>
 
           {/* Hero search */}
@@ -1139,7 +1139,7 @@ function LandingPage({ onSearch }) {
       <section style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border)" }}>
         <div style={{ maxWidth: "640px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1px", background: "var(--border)" }}>
           {[
-            { val: "141k+", label: "Licensed sponsors" },
+            { val: "125k+", label: "Licensed sponsors" },
             { val: "6,240+", label: "UK cities covered" },
             { val: "£41,700", label: "2026 CoS threshold" },
           ].map(({ val, label }) => (
@@ -1209,7 +1209,7 @@ function LandingPage({ onSearch }) {
           </div>
           <div className="steps-row" style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
             {[
-              { num: "01", icon: "⌕", color: "#2563eb", colorDim: "rgba(37,99,235,0.1)", title: "Search", body: "Type a company name or city. 141,000+ sponsors. Results in under a second." },
+              { num: "01", icon: "⌕", color: "#2563eb", colorDim: "rgba(37,99,235,0.1)", title: "Search", body: "Type a company name or city. 125,000+ sponsors. Results in under a second." },
               { num: "02", icon: "◈", color: "#d97706", colorDim: "rgba(217,119,6,0.1)", title: "Filter", body: "Sector chips. City dropdown. Visa route. Stack filters until the list is exactly what you need." },
               { num: "03", icon: "✦", color: "#a78bfa", colorDim: "rgba(167,139,250,0.1)", title: "Ask AI", body: "Not sure which route you qualify for? Ask the AI. It knows the 2026 salary thresholds cold." },
               { num: "04", icon: "➤", color: "#16a34a", colorDim: "rgba(22,163,74,0.1)", title: "Apply", body: "Click any company. Hit Reed, LinkedIn, or Gov.uk directly. No extra steps between you and the job." },
@@ -1667,7 +1667,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
         </h1>
         <p style={{ fontSize: "13px", color: "var(--t-muted)" }}>
           <span className="live-dot" style={{ marginRight: "6px" }} />
-          141,000+ licensed sponsors · Home Office data
+          125,000+ licensed sponsors · Home Office data
         </p>
       </div>
 

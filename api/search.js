@@ -44,7 +44,7 @@ export default async function handler(req, res) {
   else if (sectorList.length > 1) filterParts.push(`sector:=[${sectorList.join(", ")}]`);
   if (town)   filterParts.push(`town:=${town}`);
   if (region) filterParts.push(`region:=${region}`);
-  if (route)  filterParts.push(`primaryRoute:=${route}`);
+  if (route)  filterParts.push(`routes:=${route}`);
   if (rating) filterParts.push(`rating:=${rating}`);
   if (status) filterParts.push(`status:=${status}`);
 
@@ -84,6 +84,7 @@ export default async function handler(req, res) {
       sector:       hit.document.sector || "",
       rating:       hit.document.rating || "",
       route:        hit.document.primaryRoute || "",
+      routes:       hit.document.routes || [],
       status:       hit.document.status || "",
     }));
 

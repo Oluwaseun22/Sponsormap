@@ -66,19 +66,14 @@ function classifySector(name) {
 
 // ─── Slug generation ──────────────────────────────────────────────────────────
 
-const slugCounts = new Map();
-
 function makeSlug(name) {
-  const base = name
+  return name
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .slice(0, 80);
-  const count = (slugCounts.get(base) || 0) + 1;
-  slugCounts.set(base, count);
-  return count === 1 ? base : `${base}-${count}`;
 }
 
 // ─── CSV parser ───────────────────────────────────────────────────────────────
@@ -180,68 +175,127 @@ function typesenseImportBatch(docs) {
 
 // ─── Parse Type & Rating column ───────────────────────────────────────────────
 // Example values: "Worker (A)", "Worker (A (Premium))", "Worker (B)", "Temporary Worker (A)"
-// Suspended: "Worker (A) (Suspended)" or contains "Suspend"
 
 function parseTypeRating(raw) {
   if (!raw) return { status: "Active", rating: "" };
   const lower = raw.toLowerCase();
   const status = lower.includes("suspend") ? "Suspended" : "Active";
-  // Extract the first (A or (B immediately after an opening paren
   const match = raw.match(/\(\s*([AB])\s*[\s)]/);
   const rating = match ? match[1] : "";
   return { status, rating };
 }
+
+// ─── Collection schema ────────────────────────────────────────────────────────
+
+const COLLECTION_SCHEMA = {
+  name: "sponsors",
+  fields: [
+    { name: "name",         type: "string"   },
+    { name: "slug",         type: "string"   },
+    { name: "town",         type: "string",   facet: true, optional: true },
+    { name: "county",       type: "string",   facet: true, optional: true },
+    { name: "region",       type: "string",   facet: true, optional: true },
+    { name: "sector",       type: "string",   facet: true, optional: true },
+    { name: "rating",       type: "string",   facet: true, optional: true },
+    { name: "primaryRoute", type: "string",   facet: true, optional: true },
+    { name: "routes",       type: "string[]", facet: true, optional: true },
+    { name: "status",       type: "string",   facet: true, optional: true },
+  ],
+};
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function run() {
   if (!TYPESENSE_ADMIN_KEY) throw new Error("TYPESENSE_ADMIN_KEY env var is required");
 
+  // 1. Download CSV
   console.log("Downloading Home Office sponsor register...");
   const csv = await fetchText(CSV_URL);
   const allLines = csv.split("\n").filter(l => l.trim());
   console.log(`Downloaded ${allLines.length - 1} rows`);
 
-  const headerLine = allLines[0];
-  const headers = parseCSVLine(headerLine).map(h => h.toLowerCase().trim());
-
+  const headers = parseCSVLine(allLines[0]).map(h => h.toLowerCase().trim());
   const col = {
-    name: headers.indexOf("organisation name"),
-    town: headers.indexOf("town/city"),
-    county: headers.indexOf("county"),
+    name:       headers.indexOf("organisation name"),
+    town:       headers.indexOf("town/city"),
+    county:     headers.indexOf("county"),
     typeRating: headers.indexOf("type & rating"),
-    route: headers.indexOf("route"),
+    route:      headers.indexOf("route"),
   };
-
-  console.log("Column indices:", col);
   if (col.name === -1) throw new Error("Could not find 'Organisation Name' column. Headers: " + headers.join(", "));
 
-  let totalImported = 0;
-  let totalFailed = 0;
-  let batch = [];
+  // 2. Parse and deduplicate by organisation name
+  // Key = lowercased name. First row wins for all fields except routes (merged).
+  const orgMap = new Map();
 
   for (let i = 1; i < allLines.length; i++) {
     const fields = parseCSVLine(allLines[i]);
     const rawName = fields[col.name]?.trim() || "";
     if (!rawName) continue;
 
-    const town = fields[col.town]?.trim() || "";
-    const county = fields[col.county]?.trim() || "";
-    const typeRating = fields[col.typeRating]?.trim() || "";
+    const key = rawName.toLowerCase();
+
+    if (!orgMap.has(key)) {
+      const town      = fields[col.town]?.trim()       || "";
+      const county    = fields[col.county]?.trim()     || "";
+      const typeRating = fields[col.typeRating]?.trim() || "";
+      const { status, rating } = parseTypeRating(typeRating);
+      orgMap.set(key, {
+        name:   rawName,
+        town,
+        county,
+        region: countyToRegion(county),
+        sector: classifySector(rawName),
+        rating,
+        status,
+        routes: new Set(),
+      });
+    }
+
     const route = fields[col.route]?.trim() || "";
+    if (route) orgMap.get(key).routes.add(route);
+  }
 
-    const { status, rating } = parseTypeRating(typeRating);
-    const region = countyToRegion(county);
-    const sector = classifySector(rawName);
-    const slug = makeSlug(rawName);
+  const totalRaw    = allLines.length - 1;
+  const totalUnique = orgMap.size;
+  console.log(`Unique organisations after dedup: ${totalUnique} (from ${totalRaw} rows, ${totalRaw - totalUnique} duplicates removed)`);
 
-    batch.push({ id: slug, name: rawName, slug, town, county, region, sector, rating, primaryRoute: route, status });
+  // 3. Drop and recreate collection
+  console.log("Recreating Typesense collection...");
+  await typesenseRequest("DELETE", "/collections/sponsors", null);
+  const createRes = await typesenseRequest("POST", "/collections", COLLECTION_SCHEMA);
+  if (createRes.status !== 201) throw new Error("Failed to create collection: " + JSON.stringify(createRes.body));
+  console.log("Collection created.");
+
+  // 4. Build docs and import in batches
+  let totalImported = 0;
+  let totalFailed   = 0;
+  let batch         = [];
+  let docIndex      = 0;
+
+  for (const entry of orgMap.values()) {
+    const routes = [...entry.routes];
+    const slug   = makeSlug(entry.name);
+    batch.push({
+      id:           slug,
+      name:         entry.name,
+      slug,
+      town:         entry.town,
+      county:       entry.county,
+      region:       entry.region,
+      sector:       entry.sector,
+      rating:       entry.rating,
+      primaryRoute: routes[0] || "",
+      routes,
+      status:       entry.status,
+    });
+    docIndex++;
 
     if (batch.length >= BATCH_SIZE) {
       const result = await typesenseImportBatch(batch);
       totalImported += result.total - result.failed;
-      totalFailed += result.failed;
-      process.stdout.write(`\r  Imported ${totalImported} | Failed ${totalFailed} | Row ${i}/${allLines.length - 1}`);
+      totalFailed   += result.failed;
+      process.stdout.write(`\r  Imported ${totalImported} | Failed ${totalFailed} | ${docIndex}/${totalUnique}`);
       batch = [];
     }
   }
@@ -249,7 +303,7 @@ async function run() {
   if (batch.length > 0) {
     const result = await typesenseImportBatch(batch);
     totalImported += result.total - result.failed;
-    totalFailed += result.failed;
+    totalFailed   += result.failed;
   }
 
   console.log(`\n\nDone!`);
