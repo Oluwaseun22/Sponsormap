@@ -4,8 +4,8 @@ import posthog from 'posthog-js'
 
 import App from './App.jsx'
 
-posthog.init('phc_ocesE77jqucFLaCwTBYsV2qaU7UgikSFDseT8w7xqAA5', {
-  api_host: 'https://eu.i.posthog.com',
+posthog.init('phc_tEtJabeYWTENxTnaKDVXZb6mdeWjRVrErqoeVbmgQoLm', {
+  api_host: 'https://us.i.posthog.com',
   person_profiles: 'identified_only',
   capture_pageview: true,
   capture_pageleave: true,
