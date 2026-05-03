@@ -596,7 +596,7 @@ function AppHeader({ dark, setDark, onSearch, currentView }) {
         {/* Right side — wide: full nav | narrow: toggle + hamburger */}
         <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
           {!narrow && <>
-            <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers" target="_blank" rel="noopener noreferrer"
               style={{ fontSize: "12px", color: "var(--t-muted)", padding: "8px 10px", transition: "color var(--ease)", whiteSpace: "nowrap" }}
               onMouseEnter={e => e.currentTarget.style.color = "var(--t-secondary)"}
               onMouseLeave={e => e.currentTarget.style.color = "var(--t-muted)"}
@@ -641,7 +641,7 @@ function AppHeader({ dark, setDark, onSearch, currentView }) {
               onMouseLeave={e => e.currentTarget.style.color = "var(--t-primary)"}
             >{label}</button>
           ))}
-          <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers" target="_blank" rel="noopener noreferrer"
             onClick={() => setMenuOpen(false)}
             style={{ display: "block", padding: "14px 4px", fontSize: "15px", fontWeight: "500", color: "var(--t-muted)", fontFamily: "var(--ff-ui)" }}
           >Gov.uk Register ↗</a>
@@ -1476,7 +1476,7 @@ function LandingPage({ onSearch }) {
 
         <div style={{ maxWidth: "960px", margin: "24px auto 0", paddingTop: "18px", borderTop: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
           <span style={{ fontSize: "11px", color: "var(--t-muted)" }}>© 2026 SponsorMap · <a href="https://sponsormap.engtx.co.uk" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>sponsormap.engtx.co.uk</a></span>
-          <span style={{ fontSize: "11px", color: "var(--t-muted)" }}>Data: <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>Home Office Register</a></span>
+          <span style={{ fontSize: "11px", color: "var(--t-muted)" }}>Data: <a href="https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>Home Office Register</a></span>
         </div>
       </footer>
     </div>
@@ -1593,7 +1593,7 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
           )}
           <a href={reedUrl} target="_blank" rel="noopener noreferrer" className="act">Reed Jobs →</a>
           <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="act">LinkedIn →</a>
-          <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer" className="act">Verify Gov.uk →</a>
+          <a href="https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers" target="_blank" rel="noopener noreferrer" className="act">Verify Gov.uk →</a>
         </div>
       )}
     </div>
@@ -1924,7 +1924,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
         <span aria-hidden="true" style={{ color: "var(--c-yellow)", marginRight: "6px" }}>⚠</span>
         <strong style={{ color: "var(--t-secondary)" }}>Data sourced from the Home Office Register of Licensed Sponsors.</strong>
         {" "}Verify status on the{" "}
-        <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer"
+        <a href="https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers" target="_blank" rel="noopener noreferrer"
           style={{ color: "var(--accent)", fontWeight: "500" }}>official Home Office register</a>{" "}before applying.
       </div>
     </div>
@@ -2069,10 +2069,10 @@ function AboutPage({ onSearch }) {
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-xl)", padding: "36px 32px", marginBottom: "20px", boxShadow: "var(--sh-card)" }}>
           <h2 style={{ fontFamily: "var(--ff-display)", fontSize: "22px", fontWeight: "600", color: "var(--t-primary)", marginBottom: "20px", letterSpacing: "-0.01em" }}>The Data</h2>
           <div style={{ fontSize: "15px", color: "var(--t-secondary)", lineHeight: "1.85" }}>
-            <p style={{ marginBottom: "16px" }}>Every company in SponsorMap is sourced from the{" "}<a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", fontWeight: "600" }}>Home Office Register of Licensed Sponsors</a>{" "}— the official UK government list of organisations authorised to issue Certificates of Sponsorship. No self-reported claims. No guesswork.</p>
+            <p style={{ marginBottom: "16px" }}>Every company in SponsorMap is sourced from the{" "}<a href="https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", fontWeight: "600" }}>Home Office Register of Licensed Sponsors</a>{" "}— the official UK government list of organisations authorised to issue Certificates of Sponsorship. No self-reported claims. No guesswork.</p>
             <p style={{ marginBottom: "20px" }}>SponsorMap processes the register, classifies companies by sector and city, and makes it searchable. That's it.</p>
           </div>
-          <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers" target="_blank" rel="noopener noreferrer"
             style={{ fontSize: "13px", color: "var(--accent)", fontWeight: "600", transition: "opacity var(--ease)" }}
             onMouseEnter={e => e.currentTarget.style.opacity = "0.7"}
             onMouseLeave={e => e.currentTarget.style.opacity = "1"}
