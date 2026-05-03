@@ -48,6 +48,29 @@ const SECTOR_META = {
   Transport: { icon: "➤", color: "var(--c-sky)", desc: "Aviation, logistics & rail" },
 };
 
+const FEATURED_SPONSORS = [
+  { id: "hsbc-holdings-plc",                    name: "HSBC Holdings PLC",                    town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "hsbc-holdings-plc",                    atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "google-uk-limited",                    name: "Google UK Limited",                    town: "London", sector: "Technology",  rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "google-uk-limited",                    atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "amazon-uk-services-ltd",               name: "Amazon UK Services Ltd",               town: "London", sector: "Technology",  rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "amazon-uk-services-ltd",               atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "microsoft-limited",                    name: "Microsoft Limited",                    town: "London", sector: "Technology",  rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "microsoft-limited",                    atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "deloitte-llp",                         name: "Deloitte LLP",                         town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "deloitte-llp",                         atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "pricewaterhousecoopers-llp",           name: "PricewaterhouseCoopers LLP",           town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "pricewaterhousecoopers-llp",           atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "kpmg-llp",                             name: "KPMG LLP",                             town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "kpmg-llp",                             atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "ernst-young-llp",                      name: "Ernst & Young LLP",                    town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "ernst-young-llp",                      atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "barclays-bank-uk-plc",                 name: "Barclays Bank UK PLC",                 town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "barclays-bank-uk-plc",                 atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "lloyds-bank-plc",                      name: "Lloyds Bank PLC",                      town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "lloyds-bank-plc",                      atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "nhs-commissioning-board",              name: "NHS England",                          town: "London", sector: "Healthcare",  rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "nhs-commissioning-board",              atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "british-broadcasting-corporation",     name: "British Broadcasting Corporation",     town: "London", sector: "Technology",  rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "british-broadcasting-corporation",     atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "goldman-sachs-international",          name: "Goldman Sachs International",          town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "goldman-sachs-international",          atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "jpmorgan-chase-bank-na",               name: "JPMorgan Chase Bank, N.A.",            town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "jpmorgan-chase-bank-na",               atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "meta-platforms-ireland-limited",       name: "Meta Platforms Ireland Limited",       town: "London", sector: "Technology",  rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "meta-platforms-ireland-limited",       atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "apple-distribution-international-limited", name: "Apple Distribution International Ltd", town: "London", sector: "Technology", rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "apple-distribution-international-limited", atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "ibm-united-kingdom-limited",           name: "IBM United Kingdom Limited",           town: "London", sector: "Technology",  rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "ibm-united-kingdom-limited",           atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "accenture-uk-limited",                 name: "Accenture UK Limited",                 town: "London", sector: "Technology",  rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "accenture-uk-limited",                 atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "monzo-bank-ltd",                       name: "Monzo Bank Ltd",                       town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "monzo-bank-ltd",                       atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+  { id: "revolut-ltd",                          name: "Revolut Ltd",                          town: "London", sector: "Finance",     rating: "A", route: "Skilled Worker", routes: ["Skilled Worker"], status: "Active", county: "", region: "London", slug: "revolut-ltd",                          atsType: "", careersUrl: "", fingerprintStatus: "", jobCount: 0 },
+];
+
 const AI_SUGGESTIONS = [
   "Tech sponsors in Leeds",
   "What's the new entrant salary?",
@@ -1630,7 +1653,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
   const [region, setRegion] = useState("");
   const [route, setRoute] = useState("");
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -1653,8 +1676,15 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
   // Reset page when filters change
   useEffect(() => { setPage(1); }, [sectors, location, region, route]);
 
-  // Fetch sponsors from /api/search
+  const isDefaultView = !debouncedQ && !sectors.length && !location && !region && !route;
+
+  // Fetch sponsors from /api/search — skip on default view (show featured list instead)
   useEffect(() => {
+    if (isDefaultView) {
+      setLoading(false);
+      setError(null);
+      return;
+    }
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -1679,7 +1709,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
         setLoading(false);
       });
     return () => { cancelled = true; };
-  }, [debouncedQ, sectors, location, region, route, page]);
+  }, [debouncedQ, sectors, location, region, route, page, isDefaultView]);
 
   const toggleSector = useCallback(s => setSectors(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s]), []);
   const clearAll = useCallback(() => { setSearch(""); setDebouncedQ(""); setSectors([]); setLocation(""); setRegion(""); setRoute(""); setPage(1); }, []);
@@ -1842,7 +1872,9 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
               ? "Searching..."
               : error
                 ? <span style={{ color: "var(--c-rose)" }}>{error}</span>
-                : <><strong style={{ color: "var(--t-primary)", fontFamily: "var(--ff-mono)" }}>{total.toLocaleString()}</strong>{" "}sponsor{total !== 1 ? "s" : ""} found{totalPages > 1 && <span> · page {page} of {totalPages.toLocaleString()}</span>}</>
+                : isDefaultView
+                  ? <><strong style={{ color: "var(--t-primary)", fontFamily: "var(--ff-mono)" }}>Featured</strong>{" "}sponsors · search to explore all 125,000+</>
+                  : <><strong style={{ color: "var(--t-primary)", fontFamily: "var(--ff-mono)" }}>{total.toLocaleString()}</strong>{" "}sponsor{total !== 1 ? "s" : ""} found{totalPages > 1 && <span> · page {page} of {totalPages.toLocaleString()}</span>}</>
             }
           </span>
           {hasFilters && <button onClick={clearAll} className="btn-g" style={{ padding: "5px 12px", fontSize: "11px" }}>✕ Clear all</button>}
@@ -1851,7 +1883,13 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }} role="list" aria-label="Sponsor results">
           {loading
             ? Array.from({ length: 5 }).map((_, i) => <div key={i} role="listitem"><SkeletonCard /></div>)
-            : results.length > 0
+            : isDefaultView
+              ? FEATURED_SPONSORS.map((s, i) => (
+                <div key={s.id} role="listitem">
+                  <SponsorCard sponsor={s} index={i} isBookmarked={isBookmarked(s.id)} onBookmark={toggle} />
+                </div>
+              ))
+              : results.length > 0
               ? results.map((s, i) => (
                 <div key={`${s.id}-${filterKey}-${page}`} role="listitem">
                   <SponsorCard sponsor={s} index={i} isBookmarked={isBookmarked(s.id)} onBookmark={toggle} />
@@ -1876,7 +1914,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
         </div>
 
         {/* Pagination */}
-        {!loading && totalPages > 1 && (
+        {!loading && !isDefaultView && totalPages > 1 && (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "6px", marginTop: "24px", flexWrap: "wrap" }}>
             <button onClick={() => { setPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
               disabled={page === 1} className="btn-g" style={{ padding: "7px 14px", fontSize: "12px", opacity: page === 1 ? 0.4 : 1 }}>← Prev</button>
