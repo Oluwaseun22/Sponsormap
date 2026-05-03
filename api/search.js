@@ -75,17 +75,21 @@ export default async function handler(req, res) {
     const data = await tsRes.json();
 
     const results = (data.hits || []).map(hit => ({
-      id:           hit.document.slug,
-      name:         hit.document.name,
-      slug:         hit.document.slug,
-      town:         hit.document.town || "",
-      county:       hit.document.county || "",
-      region:       hit.document.region || "",
-      sector:       hit.document.sector || "",
-      rating:       hit.document.rating || "",
-      route:        hit.document.primaryRoute || "",
-      routes:       hit.document.routes || [],
-      status:       hit.document.status || "",
+      id:                hit.document.slug,
+      name:              hit.document.name,
+      slug:              hit.document.slug,
+      town:              hit.document.town || "",
+      county:            hit.document.county || "",
+      region:            hit.document.region || "",
+      sector:            hit.document.sector || "",
+      rating:            hit.document.rating || "",
+      route:             hit.document.primaryRoute || "",
+      routes:            hit.document.routes || [],
+      status:            hit.document.status || "",
+      atsType:           hit.document.atsType || "",
+      careersUrl:        hit.document.careersUrl || "",
+      fingerprintStatus: hit.document.fingerprintStatus || "",
+      jobCount:          hit.document.jobCount || 0,
     }));
 
     const total = data.found || 0;
