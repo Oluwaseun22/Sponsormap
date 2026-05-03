@@ -14,32 +14,6 @@ const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = 60 * 1000;
 const RATE_LIMIT_MAX    = 60;
 
-// Slugs for well-known companies, in priority order (HSBC first, etc.)
-// Non-existent slugs are silently ignored by Typesense pinned_hits.
-const PROMINENT_SLUGS = [
-  "hsbc-holdings-plc",
-  "google-uk-limited",
-  "amazon-uk-services-ltd",
-  "microsoft-limited",
-  "deloitte-llp",
-  "pricewaterhousecoopers-llp",
-  "kpmg-llp",
-  "ernst-young-llp",
-  "barclays-bank-uk-plc",
-  "lloyds-bank-plc",
-  "british-broadcasting-corporation",
-  "goldman-sachs-international",
-  "jpmorgan-chase-bank-national-association",
-  "meta-platforms-ireland-limited",
-  "apple-distribution-international-limited",
-  "ibm-united-kingdom-limited",
-  "accenture-uk-limited",
-  "mckinsey-company-united-kingdom",
-  "boston-consulting-group-uk-llp",
-  "hsbc-bank-plc",
-  "nhs-commissioning-board",
-];
-
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "https://sponsormap.engtx.co.uk");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
@@ -73,15 +47,11 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Search service not configured" });
   }
 
-  // Default view: no query, no explicit location → show London sponsors with prominent companies first
-  const isDefaultView = !q && !town && !region;
-
   const filterParts = [];
   const sectorList = sector ? sector.split(",").map(s => s.trim()).filter(Boolean) : [];
   if (sectorList.length === 1) filterParts.push(`sector:=${sectorList[0]}`);
   else if (sectorList.length > 1) filterParts.push(`sector:=[${sectorList.join(", ")}]`);
-  if (isDefaultView) filterParts.push("town:=London");
-  else if (town)   filterParts.push(`town:=${town}`);
+  if (town)   filterParts.push(`town:=${town}`);
   if (region) filterParts.push(`region:=${region}`);
   if (route)  filterParts.push(`routes:=${route}`);
   if (rating) filterParts.push(`rating:=${rating}`);
@@ -95,13 +65,8 @@ export default async function handler(req, res) {
   };
 
   if (!q) {
-    // Alphabetical sort when browsing without a search query
-    searchParams.sort_by = "name:asc";
-  }
-
-  if (isDefaultView) {
-    // Pin well-known companies to the top of the first pages; Typesense ignores any slug that doesn't exist
-    searchParams.pinned_hits = PROMINENT_SLUGS.map((slug, i) => `${slug}:${i + 1}`).join(",");
+    // Sort by town alphabetically when browsing without a search query — clusters London results together
+    searchParams.sort_by = "town:asc";
   }
 
   const filterStr = filterParts.join(" && ");
