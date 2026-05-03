@@ -34,15 +34,21 @@ const BATCH_DELAY_MS = 500;
 // ─── ATS patterns ─────────────────────────────────────────────────────────────
 
 const ATS_PATTERNS = [
-  { name: "Greenhouse",      patterns: [/greenhouse\.io/, /boards\.greenhouse\.net/] },
-  { name: "Workday",         patterns: [/workday\.com/, /myworkdayjobs\.com/] },
-  { name: "Lever",           patterns: [/lever\.co/, /jobs\.lever\.co/] },
-  { name: "Ashby",           patterns: [/ashbyhq\.com/] },
-  { name: "SmartRecruiters", patterns: [/smartrecruiters\.com/] },
-  { name: "TeamTailor",      patterns: [/teamtailor\.com/] },
+  { name: "Greenhouse",      patterns: [/greenhouse\.io/, /boards\.greenhouse\.net/, /grnhse_app/, /greenhouse-jobboard/] },
+  { name: "Workday",         patterns: [/workday\.com/, /myworkdayjobs\.com/, /wd1\.myworkdayjobs/, /wd3\.myworkdayjobs/, /wd5\.myworkdayjobs/, /\.wd\d\./] },
+  { name: "Lever",           patterns: [/jobs\.lever\.co/, /apply\.lever\.co/, /lever\.co\/apply/, /lever\.co\/jobs/, /lever-jobs-container/] },
+  { name: "Ashby",           patterns: [/ashbyhq\.com/, /ashby-application/] },
+  { name: "SmartRecruiters", patterns: [/smartrecruiters\.com/, /careers\.smartrecruiters/, /smartjobs/] },
+  { name: "TeamTailor",      patterns: [/teamtailor\.com/, /career\.teamtailor/, /teamtailor-jobs/] },
   { name: "Recruitee",       patterns: [/recruitee\.com/] },
-  { name: "Personio",        patterns: [/personio\.com/] },
-  { name: "BambooHR",        patterns: [/bamboohr\.com/] },
+  { name: "Personio",        patterns: [/personio\.com/, /jobs\.personio/, /personio-job-listing/] },
+  { name: "BambooHR",        patterns: [/bamboohr\.com/, /app\.bamboohr\.com/] },
+  { name: "SAP SuccessFactors", patterns: [/successfactors\.com/, /successfactors\.eu/, /sfsf\.com/] },
+  { name: "iCIMS",           patterns: [/icims\.com/, /careers\.icims\.com/] },
+  { name: "Taleo",           patterns: [/taleo\.net/, /oracle\.taleo/, /tbe\.taleo/] },
+  { name: "Jobvite",         patterns: [/jobvite\.com/, /jobs\.jobvite\.com/] },
+  { name: "Workable",        patterns: [/workable\.com/, /apply\.workable\.com/] },
+  { name: "Jazz",            patterns: [/jazz\.co/, /app\.jazz\.co/, /resumatorcdn/] },
 ];
 
 const CAREERS_PATHS = [
@@ -106,7 +112,7 @@ function httpGet(urlStr, redirectsLeft = 5) {
         return httpGet(next, redirectsLeft - 1).then(resolve).catch(reject);
       }
       let body = "";
-      res.on("data", chunk => { body += chunk; if (body.length > 60_000) res.destroy(); });
+      res.on("data", chunk => { body += chunk; if (body.length > 200_000) res.destroy(); });
       res.on("end",  () => resolve({ finalUrl: urlStr, status: res.statusCode, body }));
       res.on("close",() => resolve({ finalUrl: urlStr, status: res.statusCode, body }));
     });
@@ -159,10 +165,26 @@ async function findWebsiteViaCH(name) {
 
 // ─── ATS detection ────────────────────────────────────────────────────────────
 
+function extractEmbeddedUrls(html) {
+  const urls = [];
+  const attrRe = /(?:src|href|action|data-[a-z-]+)\s*=\s*["']([^"']{4,300})["']/gi;
+  let m;
+  while ((m = attrRe.exec(html)) !== null) urls.push(m[1]);
+  const jsRe = /["'\`](https?:\/\/[^"'\`\s]{8,300})["'\`]/g;
+  while ((m = jsRe.exec(html)) !== null) urls.push(m[1]);
+  return urls;
+}
+
 function detectAts(url, body) {
   for (const { name, patterns } of ATS_PATTERNS) {
-    for (const p of patterns) {
-      if (p.test(url) || p.test(body)) return name;
+    for (const p of patterns) { if (p.test(url)) return name; }
+  }
+  for (const { name, patterns } of ATS_PATTERNS) {
+    for (const p of patterns) { if (p.test(body)) return name; }
+  }
+  for (const eu of extractEmbeddedUrls(body)) {
+    for (const { name, patterns } of ATS_PATTERNS) {
+      for (const p of patterns) { if (p.test(eu)) return name; }
     }
   }
   return null;

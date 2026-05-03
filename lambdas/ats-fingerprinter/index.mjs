@@ -32,15 +32,21 @@ const FETCH_TIMEOUT_MS = 10_000;
 // ─── ATS patterns ─────────────────────────────────────────────────────────────
 
 const ATS_PATTERNS = [
-  { name: "Greenhouse",       patterns: [/greenhouse\.io/, /boards\.greenhouse\.net/] },
-  { name: "Workday",          patterns: [/workday\.com/, /myworkdayjobs\.com/] },
-  { name: "Lever",            patterns: [/lever\.co/, /jobs\.lever\.co/] },
-  { name: "Ashby",            patterns: [/ashbyhq\.com/] },
-  { name: "SmartRecruiters",  patterns: [/smartrecruiters\.com/] },
-  { name: "TeamTailor",       patterns: [/teamtailor\.com/] },
-  { name: "Recruitee",        patterns: [/recruitee\.com/] },
-  { name: "Personio",         patterns: [/personio\.com/] },
-  { name: "BambooHR",         patterns: [/bamboohr\.com/] },
+  { name: "Greenhouse",      patterns: [/greenhouse\.io/, /boards\.greenhouse\.net/, /grnhse_app/, /greenhouse-jobboard/] },
+  { name: "Workday",         patterns: [/workday\.com/, /myworkdayjobs\.com/, /wd1\.myworkdayjobs/, /wd3\.myworkdayjobs/, /wd5\.myworkdayjobs/, /\.wd\d\./] },
+  { name: "Lever",           patterns: [/jobs\.lever\.co/, /apply\.lever\.co/, /lever\.co\/apply/, /lever\.co\/jobs/, /lever-jobs-container/] },
+  { name: "Ashby",           patterns: [/ashbyhq\.com/, /ashby-application/] },
+  { name: "SmartRecruiters", patterns: [/smartrecruiters\.com/, /careers\.smartrecruiters/, /smartjobs/] },
+  { name: "TeamTailor",      patterns: [/teamtailor\.com/, /career\.teamtailor/, /teamtailor-jobs/] },
+  { name: "Recruitee",       patterns: [/recruitee\.com/] },
+  { name: "Personio",        patterns: [/personio\.com/, /jobs\.personio/, /personio-job-listing/] },
+  { name: "BambooHR",        patterns: [/bamboohr\.com/, /app\.bamboohr\.com/] },
+  { name: "SAP SuccessFactors", patterns: [/successfactors\.com/, /successfactors\.eu/, /sfsf\.com/] },
+  { name: "iCIMS",           patterns: [/icims\.com/, /careers\.icims\.com/] },
+  { name: "Taleo",           patterns: [/taleo\.net/, /oracle\.taleo/, /tbe\.taleo/] },
+  { name: "Jobvite",         patterns: [/jobvite\.com/, /jobs\.jobvite\.com/] },
+  { name: "Workable",        patterns: [/workable\.com/, /apply\.workable\.com/] },
+  { name: "Jazz",            patterns: [/jazz\.co/, /app\.jazz\.co/, /resumatorcdn/] },
 ];
 
 // Paths to probe on the company's own domain
@@ -95,11 +101,10 @@ function fetchWithRedirects(urlStr, redirectsLeft = 5) {
         res.destroy();
         return fetchWithRedirects(next, redirectsLeft - 1).then(resolve).catch(reject);
       }
-      // Consume a small slice of the body (enough for ATS link detection)
       let body = "";
       res.on("data", chunk => {
         body += chunk;
-        if (body.length > 50_000) res.destroy(); // don't buffer the whole page
+        if (body.length > 200_000) res.destroy(); // cap at 200KB — enough for ATS iframe/script detection
       });
       res.on("end",   () => resolve({ url: urlStr, finalUrl: urlStr, status: res.statusCode, body }));
       res.on("close", () => resolve({ url: urlStr, finalUrl: urlStr, status: res.statusCode, body }));
@@ -111,10 +116,44 @@ function fetchWithRedirects(urlStr, redirectsLeft = 5) {
 
 // ─── ATS detection ────────────────────────────────────────────────────────────
 
+/**
+ * Extracts all URL-like strings from HTML attributes (src, href, action, data-*)
+ * and JS string literals, then runs ATS pattern matching against them.
+ * This catches ATS embedded via iframes, script tags, and <a> links whose
+ * URL doesn't appear in the final redirect chain.
+ */
+function extractEmbeddedUrls(html) {
+  const urls = [];
+  // iframe src, script src, form action, link href, img src, a href
+  const attrRe = /(?:src|href|action|data-[a-z-]+)\s*=\s*["']([^"']{4,300})["']/gi;
+  let m;
+  while ((m = attrRe.exec(html)) !== null) urls.push(m[1]);
+  // JSON / JS string literals that look like URLs
+  const jsRe = /["'`](https?:\/\/[^"'`\s]{8,300})["'`]/g;
+  while ((m = jsRe.exec(html)) !== null) urls.push(m[1]);
+  return urls;
+}
+
 function detectAts(finalUrl, body) {
+  // 1. Check final redirect URL
   for (const { name, patterns } of ATS_PATTERNS) {
     for (const p of patterns) {
-      if (p.test(finalUrl) || p.test(body)) return name;
+      if (p.test(finalUrl)) return name;
+    }
+  }
+  // 2. Check full body text (catches plain-text mentions, JSON configs, etc.)
+  for (const { name, patterns } of ATS_PATTERNS) {
+    for (const p of patterns) {
+      if (p.test(body)) return name;
+    }
+  }
+  // 3. Deep-scan HTML attributes and embedded JS URL strings
+  const embeddedUrls = extractEmbeddedUrls(body);
+  for (const url of embeddedUrls) {
+    for (const { name, patterns } of ATS_PATTERNS) {
+      for (const p of patterns) {
+        if (p.test(url)) return name;
+      }
     }
   }
   return null;
