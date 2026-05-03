@@ -1593,7 +1593,7 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
           )}
           <a href={reedUrl} target="_blank" rel="noopener noreferrer" className="act">Reed Jobs →</a>
           <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="act">LinkedIn →</a>
-          <a href="https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers" target="_blank" rel="noopener noreferrer" className="act">Verify Gov.uk →</a>
+          <a href={`https://find-and-update.company-information.service.gov.uk/?q=${encodeURIComponent(sponsor.name)}`} target="_blank" rel="noopener noreferrer" className="act">Companies House →</a>
         </div>
       )}
     </div>
