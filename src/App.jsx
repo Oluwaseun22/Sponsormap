@@ -1540,7 +1540,7 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
             role="button"
             aria-expanded={open}
             aria-label={open ? "Hide job links" : "Show job links"}
-            onClick={() => setOpen(o => !o)}
+            onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
             onKeyDown={e => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), setOpen(o => !o))}
             style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px", fontWeight: "600", padding: "3px 10px", borderRadius: "20px", background: "none", border: "1px solid var(--border)", color: "var(--t-muted)", cursor: "pointer", transition: "all var(--ease)", whiteSpace: "nowrap" }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.color = "var(--accent)"; }}
