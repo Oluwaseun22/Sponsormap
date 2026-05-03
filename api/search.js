@@ -64,11 +64,6 @@ export default async function handler(req, res) {
     per_page:     String(perPageNum),
   };
 
-  if (!q) {
-    // Sort by town alphabetically when browsing without a search query — clusters London results together
-    searchParams.sort_by = "town:asc";
-  }
-
   const filterStr = filterParts.join(" && ");
   if (filterStr) searchParams.filter_by = filterStr;
 
