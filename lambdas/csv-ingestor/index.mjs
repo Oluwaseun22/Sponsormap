@@ -190,16 +190,22 @@ function parseTypeRating(raw) {
 const COLLECTION_SCHEMA = {
   name: "sponsors",
   fields: [
-    { name: "name",         type: "string"   },
-    { name: "slug",         type: "string"   },
-    { name: "town",         type: "string",   facet: true, optional: true },
-    { name: "county",       type: "string",   facet: true, optional: true },
-    { name: "region",       type: "string",   facet: true, optional: true },
-    { name: "sector",       type: "string",   facet: true, optional: true },
-    { name: "rating",       type: "string",   facet: true, optional: true },
-    { name: "primaryRoute", type: "string",   facet: true, optional: true },
-    { name: "routes",       type: "string[]", facet: true, optional: true },
-    { name: "status",       type: "string",   facet: true, optional: true },
+    { name: "name",              type: "string"                         },
+    { name: "slug",              type: "string"                         },
+    { name: "town",              type: "string",   facet: true, optional: true },
+    { name: "county",            type: "string",   facet: true, optional: true },
+    { name: "region",            type: "string",   facet: true, optional: true },
+    { name: "sector",            type: "string",   facet: true, optional: true },
+    { name: "rating",            type: "string",   facet: true, optional: true },
+    { name: "primaryRoute",      type: "string",   facet: true, optional: true },
+    { name: "routes",            type: "string[]", facet: true, optional: true },
+    { name: "status",            type: "string",   facet: true, optional: true },
+    { name: "atsType",           type: "string",   facet: true, optional: true },
+    { name: "careersUrl",        type: "string",                optional: true },
+    { name: "websiteUrl",        type: "string",                optional: true },
+    { name: "fingerprintStatus", type: "string",   facet: true, optional: true },
+    { name: "fingerprintedAt",   type: "string",                optional: true },
+    { name: "jobCount",          type: "int32",                 optional: true },
   ],
 };
 
@@ -277,17 +283,19 @@ async function run() {
     const routes = [...entry.routes];
     const slug   = makeSlug(entry.name);
     batch.push({
-      id:           slug,
-      name:         entry.name,
+      id:                slug,
+      name:              entry.name,
       slug,
-      town:         entry.town,
-      county:       entry.county,
-      region:       entry.region,
-      sector:       entry.sector,
-      rating:       entry.rating,
-      primaryRoute: routes[0] || "",
+      town:              entry.town,
+      county:            entry.county,
+      region:            entry.region,
+      sector:            entry.sector,
+      rating:            entry.rating,
+      primaryRoute:      routes[0] || "",
       routes,
-      status:       entry.status,
+      status:            entry.status,
+      fingerprintStatus: "pending",
+      jobCount:          0,
     });
     docIndex++;
 

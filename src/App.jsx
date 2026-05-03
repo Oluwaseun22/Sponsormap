@@ -1485,12 +1485,26 @@ function LandingPage({ onSearch }) {
 
 // ─── Search tool ──────────────────────────────────────────────────────────────
 
+const ATS_COLORS = {
+  Greenhouse:      { bg: "rgba(48,175,100,0.12)", border: "rgba(48,175,100,0.28)", text: "#1e8c50" },
+  Workday:         { bg: "rgba(243,112,33,0.12)", border: "rgba(243,112,33,0.28)", text: "#b04a08" },
+  Lever:           { bg: "rgba(0,133,255,0.10)",  border: "rgba(0,133,255,0.25)",  text: "#0060cc" },
+  Ashby:           { bg: "rgba(110,70,220,0.10)", border: "rgba(110,70,220,0.25)", text: "#5530a8" },
+  SmartRecruiters: { bg: "rgba(230,30,80,0.10)",  border: "rgba(230,30,80,0.25)",  text: "#b81040" },
+  TeamTailor:      { bg: "rgba(80,170,240,0.12)", border: "rgba(80,170,240,0.28)", text: "#0074b8" },
+  Recruitee:       { bg: "rgba(255,180,0,0.12)",  border: "rgba(255,180,0,0.28)",  text: "#8a5800" },
+  Personio:        { bg: "rgba(0,150,136,0.10)",  border: "rgba(0,150,136,0.25)",  text: "#006b60" },
+  BambooHR:        { bg: "rgba(100,200,60,0.12)", border: "rgba(100,200,60,0.28)", text: "#3a7a10" },
+};
+
 function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
   const [open, setOpen] = useState(false);
   const meta = SECTOR_META[sponsor.sector] || { icon: "◉", color: "var(--t-muted)" };
   const isARated = sponsor.rating === "A";
   const reedUrl = `https://www.reed.co.uk/jobs?keywords=${encodeURIComponent(sponsor.name.split(" ")[0])}&location=${encodeURIComponent(sponsor.town)}`;
   const linkedinUrl = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(sponsor.name)}&location=${encodeURIComponent(sponsor.town)}`;
+  const hasKnownAts = sponsor.atsType && sponsor.atsType !== "Unknown" && sponsor.atsType !== "";
+  const atsColors = hasKnownAts ? (ATS_COLORS[sponsor.atsType] || ATS_COLORS.Greenhouse) : null;
 
   return (
     <div className="card-enter" style={{ animationDelay: `${Math.min(index * 0.045, 0.5)}s` }}>
@@ -1535,6 +1549,16 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
           <span className="mono-label" style={{ display: "inline-flex", alignItems: "center", padding: "3px 9px", borderRadius: "20px", background: "var(--bg-raised)", border: "1px solid var(--border)", color: "var(--t-secondary)" }}>
             {sponsor.route === "Skilled Worker" ? "SW" : "HC"}
           </span>
+          {hasKnownAts && (
+            <span style={{ display: "inline-flex", alignItems: "center", fontSize: "11px", fontWeight: "600", padding: "3px 9px", borderRadius: "20px", background: atsColors.bg, border: `1px solid ${atsColors.border}`, color: atsColors.text, whiteSpace: "nowrap" }}>
+              {sponsor.atsType}
+            </span>
+          )}
+          {sponsor.jobCount > 0 && (
+            <span style={{ display: "inline-flex", alignItems: "center", fontSize: "11px", fontWeight: "600", padding: "3px 9px", borderRadius: "20px", background: "var(--c-green-dim)", border: "1px solid var(--c-green-border)", color: "var(--c-green)", whiteSpace: "nowrap" }}>
+              {sponsor.jobCount} {sponsor.jobCount === 1 ? "job" : "jobs"}
+            </span>
+          )}
           {/* Expand toggle — only to show job links */}
           <button
             role="button"
@@ -1559,9 +1583,14 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
         </div>
       </div>
 
-      {/* Expanded: job links only */}
+      {/* Expanded: job links */}
       {open && (
         <div style={{ background: "var(--bg-card-hi)", border: "1px solid var(--accent-mid)", borderTop: "1px solid var(--border)", borderRadius: "0 0 var(--r-lg) var(--r-lg)", padding: "12px 16px", display: "flex", gap: "8px", flexWrap: "wrap", animation: "fadeIn 0.18s ease forwards" }}>
+          {sponsor.careersUrl && (
+            <a href={sponsor.careersUrl} target="_blank" rel="noopener noreferrer" className="act" style={{ fontWeight: "700" }}>
+              {hasKnownAts ? `${sponsor.atsType} Careers →` : "Careers Page →"}
+            </a>
+          )}
           <a href={reedUrl} target="_blank" rel="noopener noreferrer" className="act">Reed Jobs →</a>
           <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="act">LinkedIn →</a>
           <a href="https://find-employer-sponsors.homeoffice.gov.uk" target="_blank" rel="noopener noreferrer" className="act">Verify Gov.uk →</a>
