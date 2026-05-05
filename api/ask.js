@@ -1,3 +1,12 @@
+import { PostHog } from "posthog-node";
+
+const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
+  host: process.env.POSTHOG_HOST,
+  flushAt: 1,
+  flushInterval: 0,
+  enableExceptionAutocapture: true,
+});
+
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = 60 * 1000;
 const RATE_LIMIT_MAX    = 10;
@@ -36,9 +45,11 @@ export default async function handler(req, res) {
     const data = await response.json();
     const text = data.content?.find(b => b.type === "text")?.text;
     if (!text) { console.error("Anthropic response:", JSON.stringify(data)); return res.status(500).json({ error: "Empty response from AI" }); }
+    posthog.capture({ distinctId: ip, event: "ai_query_submitted", properties: { query_length: query.length } });
     res.status(200).json({ text });
   } catch (err) {
     console.error("AI error:", err);
+    posthog.captureException(err, ip);
     res.status(500).json({ error: "AI request failed" });
   }
 }

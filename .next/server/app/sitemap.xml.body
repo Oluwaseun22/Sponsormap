@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://sponsormap.engtx.co.uk</loc>
+<lastmod>2026-05-05T22:50:36.305Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>https://sponsormap.engtx.co.uk/terms</loc>
+<lastmod>2026-05-05T22:50:36.306Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>https://sponsormap.engtx.co.uk/privacy</loc>
+<lastmod>2026-05-05T22:50:36.306Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.3</priority>
+</url>
+</urlset>

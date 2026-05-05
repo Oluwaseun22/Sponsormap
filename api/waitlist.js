@@ -1,6 +1,14 @@
 import pg from "pg";
+import { PostHog } from "posthog-node";
 
 const { Client } = pg;
+
+const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
+  host: process.env.POSTHOG_HOST,
+  flushAt: 1,
+  flushInterval: 0,
+  enableExceptionAutocapture: true,
+});
 
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
@@ -50,6 +58,11 @@ export default async function handler(req, res) {
 
     const isNew = result.rowCount > 0;
 
+    if (isNew) {
+      posthog.identify({ distinctId: cleaned, properties: { email: cleaned, source } });
+      posthog.capture({ distinctId: cleaned, event: "waitlist_signup", properties: { source } });
+    }
+
     if (isNew && RESEND_API_KEY) {
       await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -87,6 +100,7 @@ To unsubscribe reply with "unsubscribe"`,
 
   } catch (err) {
     console.error("Waitlist error:", err.message);
+    posthog.captureException(err, cleaned);
     return res.status(500).json({ error: "Something went wrong. Please try again." });
   } finally {
     await client.end();

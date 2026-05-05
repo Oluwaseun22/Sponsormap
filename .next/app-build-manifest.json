@@ -1,0 +1,97 @@
+{
+  "pages": {
+    "/_not-found/page": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/chunks/app/_not-found/page-efa7fd28d803607c.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/css/6cb1be7ed692d68d.css",
+      "static/chunks/9da6db1e-238e0c70fb1045e5.js",
+      "static/chunks/770-89cfc181b2ea90ef.js",
+      "static/chunks/50-29e5b9f6284da190.js",
+      "static/chunks/app/layout-8cd4318c881f6eb0.js"
+    ],
+    "/admin/page": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/chunks/770-89cfc181b2ea90ef.js",
+      "static/chunks/50-29e5b9f6284da190.js",
+      "static/chunks/972-c622a72f2de04478.js",
+      "static/chunks/469-b3151f469dee15b1.js",
+      "static/chunks/app/admin/page-408ad50ba0c9462b.js"
+    ],
+    "/jobs/page": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/chunks/770-89cfc181b2ea90ef.js",
+      "static/chunks/50-29e5b9f6284da190.js",
+      "static/chunks/972-c622a72f2de04478.js",
+      "static/chunks/469-b3151f469dee15b1.js",
+      "static/chunks/app/jobs/page-176a82f694432ce6.js"
+    ],
+    "/sign-in/[[...sign-in]]/page": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/chunks/770-89cfc181b2ea90ef.js",
+      "static/chunks/50-29e5b9f6284da190.js",
+      "static/chunks/app/sign-in/[[...sign-in]]/page-d2b369835a301e1f.js"
+    ],
+    "/sign-up/[[...sign-up]]/page": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/chunks/770-89cfc181b2ea90ef.js",
+      "static/chunks/50-29e5b9f6284da190.js",
+      "static/chunks/app/sign-up/[[...sign-up]]/page-835d02da957a9687.js"
+    ],
+    "/privacy/page": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/chunks/972-c622a72f2de04478.js",
+      "static/chunks/app/privacy/page-4a2d9487b1babbea.js"
+    ],
+    "/page": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/chunks/770-89cfc181b2ea90ef.js",
+      "static/chunks/app/page-3154c1db9fd84c74.js"
+    ],
+    "/terms/page": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/chunks/972-c622a72f2de04478.js",
+      "static/chunks/app/terms/page-e1ef425dc607bcdd.js"
+    ],
+    "/sponsors/[slug]/page": [
+      "static/chunks/webpack-a3c37fcbf859f6f9.js",
+      "static/chunks/fd9d1056-e764eae7cdccc748.js",
+      "static/chunks/117-664a9c552ca8d8fe.js",
+      "static/chunks/main-app-b2965d8ac7a9903d.js",
+      "static/chunks/770-89cfc181b2ea90ef.js",
+      "static/chunks/50-29e5b9f6284da190.js",
+      "static/chunks/972-c622a72f2de04478.js",
+      "static/chunks/469-b3151f469dee15b1.js",
+      "static/chunks/app/sponsors/[slug]/page-af453ca0a37c14ff.js"
+    ]
+  }
+}
