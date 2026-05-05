@@ -1507,7 +1507,18 @@ const ATS_COLORS = {
 
 function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
   const [open, setOpen] = useState(false);
+  const [jobs, setJobs] = useState(null);
+  const [jobsLoading, setJobsLoading] = useState(false);
   const meta = SECTOR_META[sponsor.sector] || { icon: "◉", color: "var(--t-muted)" };
+
+  useEffect(() => {
+    if (!open || !sponsor.jobCount || jobs !== null) return;
+    setJobsLoading(true);
+    fetch(`/api/jobs?sponsorSlug=${encodeURIComponent(sponsor.slug)}&perPage=3&page=1`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { setJobs(data?.results || []); setJobsLoading(false); })
+      .catch(() => { setJobs([]); setJobsLoading(false); });
+  }, [open, sponsor.jobCount, sponsor.slug, jobs]);
   const isARated = sponsor.rating === "A";
   const reedUrl = `https://www.reed.co.uk/jobs?keywords=${encodeURIComponent(sponsor.name.split(" ")[0])}&location=${encodeURIComponent(sponsor.town)}`;
   const linkedinUrl = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(sponsor.name)}&location=${encodeURIComponent(sponsor.town)}`;
@@ -1591,17 +1602,59 @@ function SponsorCard({ sponsor, index, isBookmarked, onBookmark }) {
         </div>
       </div>
 
-      {/* Expanded: job links */}
+      {/* Expanded: live jobs + links */}
       {open && (
-        <div style={{ background: "var(--bg-card-hi)", border: "1px solid var(--accent-mid)", borderTop: "1px solid var(--border)", borderRadius: "0 0 var(--r-lg) var(--r-lg)", padding: "12px 16px", display: "flex", gap: "8px", flexWrap: "wrap", animation: "fadeIn 0.18s ease forwards" }}>
-          {sponsor.careersUrl && (
-            <a href={sponsor.careersUrl} target="_blank" rel="noopener noreferrer" className="act" style={{ fontWeight: "700" }}>
-              {hasKnownAts ? `${sponsor.atsType} Careers →` : "Careers Page →"}
-            </a>
+        <div style={{ background: "var(--bg-card-hi)", border: "1px solid var(--accent-mid)", borderTop: "1px solid var(--border)", borderRadius: "0 0 var(--r-lg) var(--r-lg)", padding: "14px 16px", animation: "fadeIn 0.18s ease forwards" }}>
+          {/* Live jobs section */}
+          {sponsor.jobCount > 0 && (
+            <div style={{ marginBottom: "12px" }}>
+              <div style={{ fontSize: "11px", fontWeight: "700", color: "var(--c-green)", letterSpacing: "0.06em", marginBottom: "8px", textTransform: "uppercase" }}>
+                {sponsor.jobCount} live {sponsor.jobCount === 1 ? "job" : "jobs"}
+              </div>
+              {jobsLoading ? (
+                <div style={{ fontSize: "12px", color: "var(--t-muted)" }}>Loading jobs…</div>
+              ) : jobs && jobs.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  {jobs.map(job => (
+                    <a
+                      key={job.id}
+                      href={job.careersUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ display: "flex", alignItems: "baseline", gap: "8px", textDecoration: "none", padding: "6px 10px", borderRadius: "var(--r-sm)", background: "var(--bg-raised)", border: "1px solid var(--border)", transition: "border-color var(--ease), box-shadow var(--ease)" }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--c-green)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(21,163,72,0.1)"; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "none"; }}
+                    >
+                      <span style={{ fontSize: "13px", fontWeight: "600", color: "var(--t-primary)", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{job.title}</span>
+                      {job.location && <span style={{ fontSize: "11px", color: "var(--t-muted)", whiteSpace: "nowrap", flexShrink: 0 }}>↟ {job.location}</span>}
+                      <span style={{ fontSize: "11px", color: "var(--c-green)", flexShrink: 0 }}>→</span>
+                    </a>
+                  ))}
+                  {sponsor.jobCount > 3 && (
+                    <a
+                      href={`/api/jobs?sponsorSlug=${encodeURIComponent(sponsor.slug)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: "12px", fontWeight: "600", color: "var(--accent)", textDecoration: "none", padding: "4px 0", display: "block" }}
+                    >
+                      See all {sponsor.jobCount} jobs at {sponsor.name} →
+                    </a>
+                  )}
+                </div>
+              ) : null}
+            </div>
           )}
-          <a href={reedUrl} target="_blank" rel="noopener noreferrer" className="act">Reed Jobs →</a>
-          <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="act">LinkedIn →</a>
-          <a href={`https://find-and-update.company-information.service.gov.uk/?q=${encodeURIComponent(sponsor.name)}`} target="_blank" rel="noopener noreferrer" className="act">Companies House →</a>
+          {/* Link row */}
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            {sponsor.careersUrl && (
+              <a href={sponsor.careersUrl} target="_blank" rel="noopener noreferrer" className="act" style={{ fontWeight: "700" }}>
+                {hasKnownAts ? `${sponsor.atsType} Careers →` : "Careers Page →"}
+              </a>
+            )}
+            <a href={reedUrl} target="_blank" rel="noopener noreferrer" className="act">Reed Jobs →</a>
+            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="act">LinkedIn →</a>
+            <a href={`https://find-and-update.company-information.service.gov.uk/?q=${encodeURIComponent(sponsor.name)}`} target="_blank" rel="noopener noreferrer" className="act">Companies House →</a>
+          </div>
         </div>
       )}
     </div>
@@ -1637,6 +1690,7 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
   const [location, setLocation] = useState("");
   const [region, setRegion] = useState("");
   const [route, setRoute] = useState("");
+  const [salaryMin, setSalaryMin] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
@@ -1677,9 +1731,9 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
   }, [search]);
 
   // Reset page when filters change
-  useEffect(() => { setPage(1); }, [sectors, location, region, route]);
+  useEffect(() => { setPage(1); }, [sectors, location, region, route, salaryMin]);
 
-  const isDefaultView = !debouncedQ && !sectors.length && !location && !region && !route;
+  const isDefaultView = !debouncedQ && !sectors.length && !location && !region && !route && !salaryMin;
 
   // Fetch sponsors from /api/search — skip on default view (show featured list instead)
   useEffect(() => {
@@ -1715,9 +1769,9 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
   }, [debouncedQ, sectors, location, region, route, page, isDefaultView]);
 
   const toggleSector = useCallback(s => setSectors(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s]), []);
-  const clearAll = useCallback(() => { setSearch(""); setDebouncedQ(""); setSectors([]); setLocation(""); setRegion(""); setRoute(""); setPage(1); }, []);
-  const hasFilters = !!(debouncedQ || sectors.length || location || region || route);
-  const filterKey = `${debouncedQ}|${sectors.join(",")}|${location}|${region}|${route}`;
+  const clearAll = useCallback(() => { setSearch(""); setDebouncedQ(""); setSectors([]); setLocation(""); setRegion(""); setRoute(""); setSalaryMin(0); setPage(1); }, []);
+  const hasFilters = !!(debouncedQ || sectors.length || location || region || route || salaryMin);
+  const filterKey = `${debouncedQ}|${sectors.join(",")}|${location}|${region}|${route}|${salaryMin}`;
 
   return (
     <div style={{ maxWidth: "860px", margin: "0 auto", padding: "32px 20px 120px", position: "relative", zIndex: 1 }}>
@@ -1771,6 +1825,19 @@ function SearchTool({ initialSearch, initialSector, showAI, setShowAI }) {
             style={{ width: "100%", height: "100%", background: "transparent", border: "none", outline: "none", padding: "14px 28px 14px 14px", fontSize: "13px", color: region ? "var(--t-primary)" : "var(--t-muted)", fontFamily: "var(--ff-ui)", cursor: "pointer", backgroundImage: "var(--select-arrow)", backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", appearance: "none", WebkitAppearance: "none" }}>
             <option value="">All regions</option>
             {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+          </select>
+        </div>
+
+        {/* Salary */}
+        <div style={{ flex: "1 1 110px", borderRight: "1px solid var(--border)" }}>
+          <select value={salaryMin} onChange={e => setSalaryMin(Number(e.target.value))}
+            aria-label="Filter by minimum salary"
+            style={{ width: "100%", height: "100%", background: "transparent", border: "none", outline: "none", padding: "14px 28px 14px 14px", fontSize: "13px", color: salaryMin ? "var(--t-primary)" : "var(--t-muted)", fontFamily: "var(--ff-ui)", cursor: "pointer", backgroundImage: "var(--select-arrow)", backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", appearance: "none", WebkitAppearance: "none" }}>
+            <option value={0}>Any salary</option>
+            <option value={20000}>£20k+</option>
+            <option value={30000}>£30k+</option>
+            <option value={40000}>£40k+</option>
+            <option value={50000}>£50k+</option>
           </select>
         </div>
 
