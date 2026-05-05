@@ -4,7 +4,7 @@ const BASE = "https://sponsormap.engtx.co.uk";
 
 async function fetchTopSlugs(): Promise<string[]> {
   const host = process.env.NEXT_PUBLIC_TYPESENSE_HOST;
-  const apiKey = process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_KEY;
+  const apiKey = process.env.TYPESENSE_ADMIN_KEY;
   if (!host || !apiKey) return [];
 
   const slugs: string[] = [];
