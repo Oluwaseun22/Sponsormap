@@ -59,7 +59,6 @@ export async function GET(req: NextRequest) {
     query_by: "title,sponsorName,location",
     page: String(pageNum),
     per_page: String(perPageNum),
-    sort_by: "scrapedAt:desc",
     filter_by: filterParts.join(" && "),
   };
 
