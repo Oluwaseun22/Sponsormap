@@ -25,3 +25,19 @@ dist-ssr
 .vercel
 .env*.local
 .env.local
+
+# Next.js build output
+.next/
+out/
+
+# TypeScript
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Claude worktrees and internal files
+.claude/
+.claire/
+
+# Misc
+patch*.py
+posthog-setup-report.md
