@@ -1,29 +1,9 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/api/search(.*)",
-  "/api/jobs(.*)",
-  "/api/ask(.*)",
-  "/api/waitlist(.*)",
-  "/sponsors/(.*)",
-  "/terms",
-  "/privacy",
-]);
-
-const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
-
-export default clerkMiddleware(async (auth, req) => {
-  if (isAdminRoute(req)) {
-    await auth.protect();
-  } else if (!isPublicRoute(req)) {
-    await auth.protect();
-  }
-  return NextResponse.next();
-});
+// clerkMiddleware with no callback just injects the Clerk session context.
+// Route protection (redirect when unauthenticated) is handled in each page
+// via useUser() + router.replace(), which works on Vercel's Edge runtime.
+export default clerkMiddleware();
 
 export const config = {
   matcher: [
