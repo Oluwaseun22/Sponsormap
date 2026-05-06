@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
   const perPageNum = Math.min(25, Math.max(1, parseInt(searchParams.get("perPage") ?? "10", 10)));
 
   const host = process.env.NEXT_PUBLIC_TYPESENSE_HOST;
-  const apiKey = process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_KEY;
+  const apiKey = process.env.TYPESENSE_ADMIN_KEY;
   if (!host || !apiKey) {
     return NextResponse.json({ error: "Search service not configured" }, { status: 500 });
   }
