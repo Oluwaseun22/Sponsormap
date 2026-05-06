@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://sponsormap.engtx.co.uk/sitemap.xml

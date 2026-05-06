@@ -1,32 +1,29 @@
+// AUDIT FIX [7.5]: explicit maxDuration so Anthropic responses (often 8-15s) don't get killed
+//                   by Vercel's 10-second default on the Hobby plan.
+// AUDIT FIX [6.8/7.2]: rate limit now backed by Upstash Redis (was in-memory Map — useless on serverless).
+
 import { NextRequest, NextResponse } from "next/server";
-import { PostHog } from "posthog-node";
+import { rateLimit, clientIp, rateLimitHeaders } from "@/lib/rate-limit";
 
-const posthog = new PostHog(process.env.POSTHOG_API_KEY!, {
-  host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-  flushAt: 1,
-  flushInterval: 0,
-});
+export const runtime = "nodejs";
+export const maxDuration = 30;
 
-const rateLimitMap = new Map<string, { count: number; windowStart: number }>();
-const RATE_LIMIT_WINDOW = 60 * 1000;
 const RATE_LIMIT_MAX = 10;
+const RATE_LIMIT_WINDOW_SEC = 60;
 const MAX_QUERY_LENGTH = 500;
 
 export async function POST(req: NextRequest) {
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0] ?? req.ip ?? "unknown";
-  const now = Date.now();
-  const record = rateLimitMap.get(ip) ?? { count: 0, windowStart: now };
-  if (now - record.windowStart > RATE_LIMIT_WINDOW) {
-    record.count = 0;
-    record.windowStart = now;
-  }
-  record.count++;
-  rateLimitMap.set(ip, record);
-  if (record.count > RATE_LIMIT_MAX) {
+  const ip = clientIp(req);
+  const rl = await rateLimit({
+    id: ip,
+    scope: "ask",
+    max: RATE_LIMIT_MAX,
+    windowSeconds: RATE_LIMIT_WINDOW_SEC,
+  });
+  if (!rl.ok) {
     return NextResponse.json(
       { error: "Too many requests. Please wait a minute." },
-      { status: 429 }
+      { status: 429, headers: rateLimitHeaders(rl) },
     );
   }
 
@@ -67,12 +64,7 @@ export async function POST(req: NextRequest) {
       console.error("Anthropic response:", JSON.stringify(data));
       return NextResponse.json({ error: "Empty response from AI" }, { status: 500 });
     }
-    posthog.capture({
-      distinctId: ip,
-      event: "ai_query_submitted",
-      properties: { query_length: query.length },
-    });
-    return NextResponse.json({ text });
+    return NextResponse.json({ text }, { headers: rateLimitHeaders(rl) });
   } catch (err) {
     console.error("AI error:", err);
     return NextResponse.json({ error: "AI request failed" }, { status: 500 });

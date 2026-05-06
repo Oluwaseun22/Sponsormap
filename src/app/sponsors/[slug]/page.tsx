@@ -24,7 +24,7 @@ interface Sponsor {
 
 async function fetchSponsor(slug: string): Promise<Sponsor | null> {
   const host = process.env.NEXT_PUBLIC_TYPESENSE_HOST;
-  const apiKey = process.env.TYPESENSE_ADMIN_KEY;
+  const apiKey = process.env.TYPESENSE_SEARCH_ONLY_KEY;
   if (!host || !apiKey) return null;
 
   try {
@@ -65,7 +65,7 @@ async function fetchSponsor(slug: string): Promise<Sponsor | null> {
 
 export async function generateStaticParams() {
   const host = process.env.NEXT_PUBLIC_TYPESENSE_HOST;
-  const apiKey = process.env.TYPESENSE_ADMIN_KEY;
+  const apiKey = process.env.TYPESENSE_SEARCH_ONLY_KEY;
   if (!host || !apiKey) return [];
 
   const slugs: { slug: string }[] = [];
@@ -119,7 +119,7 @@ export default async function SponsorPage({ params }: { params: { slug: string }
     "@context": "https://schema.org",
     "@type": "Organization",
     name: sponsor.name,
-    url: sponsor.careersUrl || undefined,
+    url: sponsor.careersUrl || `https://sponsormap.engtx.co.uk/sponsors/${sponsor.slug}`,
     address: loc ? {
       "@type": "PostalAddress",
       addressLocality: sponsor.town || undefined,

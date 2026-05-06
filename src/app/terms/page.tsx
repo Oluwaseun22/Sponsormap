@@ -14,7 +14,7 @@ export default function TermsPage() {
         ← Back to SponsorMap
       </Link>
       <h1 style={{ fontSize: "28px", fontWeight: "800", color: "var(--t-primary)", marginBottom: "8px" }}>Terms of Service</h1>
-      <p style={{ fontSize: "13px", color: "var(--t-muted)", marginBottom: "40px" }}>Last updated: 1 May 2025</p>
+      <p style={{ fontSize: "13px", color: "var(--t-muted)", marginBottom: "40px" }}>Last updated: 6 May 2026</p>
 
       <section style={sectionStyle}>
         <h2 style={h2Style}>1. Acceptance of Terms</h2>

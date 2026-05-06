@@ -27,6 +27,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "https://sponsormap.engtx.co.uk" },
   robots: { index: true, follow: true },
+  themeColor: "#c4872a",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -44,6 +45,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en" data-theme="light" suppressHydrationWarning>
         <head>
           <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+          <link rel="icon" href="/favicon.ico" sizes="32x32" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <link rel="manifest" href="/site.webmanifest" />
           <link
             href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
             rel="stylesheet"

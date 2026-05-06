@@ -1,15 +1,9 @@
+// AUDIT FIX [6.8/7.2]: rate limit now backed by Upstash Redis (was in-memory Map — useless on serverless).
 import { NextRequest, NextResponse } from "next/server";
-import { PostHog } from "posthog-node";
+import { rateLimit, clientIp, rateLimitHeaders } from "@/lib/rate-limit";
 
-const posthog = new PostHog(process.env.POSTHOG_API_KEY!, {
-  host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-  flushAt: 1,
-  flushInterval: 0,
-});
-
-const rateLimitMap = new Map<string, { count: number; windowStart: number }>();
-const RATE_LIMIT_WINDOW = 60 * 1000;
 const RATE_LIMIT_MAX = 60;
+const RATE_LIMIT_WINDOW_SEC = 60;
 
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -22,20 +16,17 @@ export async function OPTIONS() {
 }
 
 export async function GET(req: NextRequest) {
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0] ?? req.ip ?? "unknown";
-  const now = Date.now();
-  const record = rateLimitMap.get(ip) ?? { count: 0, windowStart: now };
-  if (now - record.windowStart > RATE_LIMIT_WINDOW) {
-    record.count = 0;
-    record.windowStart = now;
-  }
-  record.count++;
-  rateLimitMap.set(ip, record);
-  if (record.count > RATE_LIMIT_MAX) {
+  const ip = clientIp(req);
+  const rl = await rateLimit({
+    id: ip,
+    scope: "search",
+    max: RATE_LIMIT_MAX,
+    windowSeconds: RATE_LIMIT_WINDOW_SEC,
+  });
+  if (!rl.ok) {
     return NextResponse.json(
       { error: "Too many requests. Please wait." },
-      { status: 429 }
+      { status: 429, headers: rateLimitHeaders(rl) },
     );
   }
 
@@ -51,7 +42,7 @@ export async function GET(req: NextRequest) {
   const perPageNum = Math.min(25, Math.max(1, parseInt(searchParams.get("perPage") ?? "10", 10)));
 
   const host = process.env.NEXT_PUBLIC_TYPESENSE_HOST;
-  const apiKey = process.env.TYPESENSE_ADMIN_KEY;
+  const apiKey = process.env.TYPESENSE_SEARCH_ONLY_KEY;
   if (!host || !apiKey) {
     return NextResponse.json({ error: "Search service not configured" }, { status: 500 });
   }
@@ -106,12 +97,6 @@ export async function GET(req: NextRequest) {
 
     const total = data.found ?? 0;
     const totalPages = Math.max(1, Math.ceil(total / perPageNum));
-
-    posthog.capture({
-      distinctId: ip,
-      event: "sponsor_search",
-      properties: { query: q, sector: sector || null, town: town || null, region: region || null, route: route || null, rating: rating || null, results_count: total, page: pageNum },
-    });
 
     return NextResponse.json({ results, total, page: pageNum, perPage: perPageNum, totalPages });
   } catch (err) {

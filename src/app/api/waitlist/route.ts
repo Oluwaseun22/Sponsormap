@@ -1,29 +1,23 @@
+// AUDIT FIX [6.8/7.2]: rate limit now backed by Upstash Redis (was in-memory Map — useless on serverless).
 import { NextRequest, NextResponse } from "next/server";
-import { PostHog } from "posthog-node";
+import { rateLimit, clientIp, rateLimitHeaders } from "@/lib/rate-limit";
 
-const posthog = new PostHog(process.env.POSTHOG_API_KEY!, {
-  host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-  flushAt: 1,
-  flushInterval: 0,
-});
-
-const rateLimitMap = new Map<string, { count: number; windowStart: number }>();
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_SEC = 60 * 60; // one hour
 
 export async function POST(req: NextRequest) {
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0] ?? req.ip ?? "unknown";
-  const now = Date.now();
-  const record = rateLimitMap.get(ip) ?? { count: 0, windowStart: now };
-  if (now - record.windowStart > RATE_LIMIT_WINDOW) {
-    record.count = 0;
-    record.windowStart = now;
-  }
-  record.count++;
-  rateLimitMap.set(ip, record);
-  if (record.count > RATE_LIMIT_MAX) {
-    return NextResponse.json({ error: "Too many requests. Please wait." }, { status: 429 });
+  const ip = clientIp(req);
+  const rl = await rateLimit({
+    id: ip,
+    scope: "waitlist",
+    max: RATE_LIMIT_MAX,
+    windowSeconds: RATE_LIMIT_WINDOW_SEC,
+  });
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait." },
+      { status: 429, headers: rateLimitHeaders(rl) },
+    );
   }
 
   let body: { email?: string; source?: string };
@@ -60,12 +54,9 @@ export async function POST(req: NextRequest) {
     const isNew = addData.result === 1;
 
     if (isNew) {
-      posthog.identify({ distinctId: cleaned, properties: { email: cleaned, source } });
-      posthog.capture({ distinctId: cleaned, event: "waitlist_signup", properties: { source } });
-
       const RESEND_API_KEY = process.env.RESEND_API_KEY;
       if (RESEND_API_KEY) {
-        await fetch("https://api.resend.com/emails", {
+        const resendRes = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${RESEND_API_KEY}`,
@@ -78,13 +69,17 @@ export async function POST(req: NextRequest) {
             text: `Hey — you're on the list.\n\nI'll email you when SponsorMap Pro goes live with job alerts, AI scoring, and CV generation.\n\nWhile you wait, the sponsor search is already live: https://sponsormap.engtx.co.uk\n\n— Segun\nFounder, SponsorMap`,
           }),
         });
+        if (!resendRes.ok) {
+          console.error("Resend failed:", resendRes.status, await resendRes.text());
+        }
       }
     }
 
+    // AUDIT FIX [waitlist enumeration]: identical response for new vs existing subscribers
+    // so no one can probe whether an email is on the waitlist by submitting it.
     return NextResponse.json({
       success: true,
-      already_subscribed: !isNew,
-      message: isNew ? "You're on the list!" : "You're already signed up.",
+      message: "You're on the list!",
     });
   } catch (err) {
     console.error("Waitlist error:", (err as Error).message);
