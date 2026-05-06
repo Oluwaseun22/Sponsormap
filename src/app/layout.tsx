@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "https://sponsormap.engtx.co.uk" },
   robots: { index: true, follow: true },
+};
+
+export const viewport = {
   themeColor: "#c4872a",
 };
 
