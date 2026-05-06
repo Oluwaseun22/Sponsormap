@@ -24,7 +24,7 @@ interface Sponsor {
 
 async function fetchSponsor(slug: string): Promise<Sponsor | null> {
   const host = process.env.NEXT_PUBLIC_TYPESENSE_HOST;
-  const apiKey = process.env.TYPESENSE_SEARCH_ONLY_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_KEY;
   if (!host || !apiKey) return null;
 
   try {
@@ -65,7 +65,7 @@ async function fetchSponsor(slug: string): Promise<Sponsor | null> {
 
 export async function generateStaticParams() {
   const host = process.env.NEXT_PUBLIC_TYPESENSE_HOST;
-  const apiKey = process.env.TYPESENSE_SEARCH_ONLY_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_KEY;
   if (!host || !apiKey) return [];
 
   const slugs: { slug: string }[] = [];
